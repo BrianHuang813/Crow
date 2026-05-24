@@ -19,11 +19,13 @@ This is not a traditional showcase platform. It is a **living, competitive map**
 ### 2.1 Territory & The Ticking Clock
 
 - The homepage is a **60×60 grid map** (3,600 cells), rendered as pixel-art squares on an HTML Canvas.
-- Every new project claims a random initial cell and receives a starting countdown timer (e.g., 48 hours).
-- User interactions (clicks, boosts, comments) inject **energy** and **time** into the project.
-- When energy reaches 100%, the project expands to one adjacent empty or fossil cell. Energy resets to 0 after expansion.
-- Projects can only expand into `empty` or `fossil` cells — never into living (`alive`) cells. This prevents abuse.
+- Every new project claims a random initial cell and receives a starting countdown timer of **48 hours** (tunable constant).
+- User interactions (clicks, boosts) inject **Momentum** and **time** into the project.
+- When Momentum reaches 100%, the project expands into one **randomly selected** adjacent eligible cell (empty preferred over fossil). Momentum resets to 0 after expansion.
+- Projects can only expand into `empty` or `fossil` cells — never into `alive` or `dying` cells. This prevents abuse.
 - When the timer hits zero, the project dies.
+- Each user may have at most **1 alive or dying project** on the grid at any time.
+- If the grid is completely full, new submissions return `503 Grid Full`.
 
 ### 2.2 Dying State
 
@@ -33,15 +35,21 @@ This is not a traditional showcase platform. It is a **living, competitive map**
 ### 2.3 The Graveyard & Resurrection
 
 - Dead projects are not deleted. Their cells become grey **fossil** tiles on the grid.
-- Any authenticated user can resurrect a fossil project by spending their accumulated energy contribution points.
-- The resurrected project restarts with a fresh timer and the fossil's original territory.
-- Resurrecting earns a **Necromancer** achievement card for social sharing.
+- Any authenticated user can resurrect a fossil project by spending **200 Credits** (tunable constant).
+- The resurrected project restarts with a **24-hour timer** (tunable constant) and retains only its **unclaimed** fossil cells — cells eaten by expanding projects during the fossil period are permanently lost.
+- Resurrecting earns a **Necromancer** achievement card for social sharing (Phase 2).
+
+### 2.4 Abandon
+
+- A project owner can voluntarily abandon their project at any time, immediately transitioning it to dead state and converting all its cells to fossil.
+- Abandoning frees the owner's one-project slot for a new submission.
+- The Crow Submit Skill detects an existing alive project and shows its current state (name, remaining time, territory size) before asking the user to confirm abandonment.
 
 ### 2.4 Viral Export Hooks
 
 | Hook | Trigger | Output | Phase |
 |---|---|---|---|
-| Dynamic OG Card | Any `/api/og/{id}` request | PNG (1200×630), cached 60s | MVP |
+| Static OG Card | Project submission | PNG (1200×630), static snapshot — no countdown (Twitter/X caches OG images for hours regardless of Cache-Control) | MVP |
 | SOS Video | Project enters `dying` state | 5-second MP4, pre-generated | Phase 2 |
 | Timelapse War Report | Project dies or user requests | MP4/GIF from hourly snapshots | Phase 2 |
 | Necromancer Card | Successful resurrection | Static achievement PNG | Phase 2 |
@@ -189,8 +197,9 @@ State transitions are driven exclusively by the `decay_check` Celery Beat task (
   "height": 60,
   "cells": [
     { "x": 0, "y": 0, "state": "alive",  "project_id": "uuid", "color": "#ac3509" },
-    { "x": 1, "y": 0, "state": "fossil", "project_id": "uuid", "color": "#3a3a3a" },
-    { "x": 2, "y": 0, "state": "empty",  "project_id": null,   "color": null }
+    { "x": 1, "y": 0, "state": "dying",  "project_id": "uuid", "color": "#ac3509" },
+    { "x": 2, "y": 0, "state": "fossil", "project_id": "uuid", "color": "#3a3a3a" },
+    { "x": 3, "y": 0, "state": "empty",  "project_id": null,   "color": null }
   ]
 }
 ```
@@ -201,25 +210,29 @@ Cache TTL: 30 seconds.
 
 ## 5. API Design
 
-### 5.0 Interaction Energy Values
+### 5.0 Interaction Values
 
-| Type | Energy Granted | Time Granted |
-|---|---|---|
-| `click` | 5 | 300s (5 min) |
-| `boost` | 25 | 1800s (30 min) |
+| Type | Momentum Granted | Time Granted | Credits Cost | Credits Earned |
+|---|---|---|---|---|
+| `click` | 5 | 300s (5 min) | 0 | +5 (if not own project) |
+| `boost` | 25 | 1800s (30 min) | 20 | 0 |
 
-`boost` requires spending accumulated `energy_contributed` points (cost: 20 points).
+- Credits are earned **only** by interacting with another user's project.
+- Credits can be **spent** (via boost) on any project including your own.
+- Click cooldown: 60s per user per project.
 
 ### 5.1 Endpoints
 
 ```
-GET  /api/grid                    Public. Returns Redis snapshot.
-GET  /api/projects/{id}           Public. Project detail + live timer.
-POST /api/projects                Auth. Submit new project.
-POST /api/interact/{project_id}   Auth. Inject energy. Body: { type }
-POST /api/resurrect/{project_id}  Auth. Resurrect fossil project.
-GET  /api/og/{project_id}         Public. Dynamic OG image (PNG).
-GET  /api/share/{project_id}/sos-video   Public. Returns signed URL to SOS MP4.
+GET   /api/grid                         Public. Returns Redis snapshot (4 states: empty|alive|dying|fossil).
+GET   /api/projects/{id}                Public. Project detail + live timer + momentum.
+GET   /api/projects/mine                Auth. Current user's active project (for Skill conflict detection).
+POST  /api/projects                     Auth. Submit new project. Returns 503 if grid is full.
+PATCH /api/projects/{id}/abandon        Auth (owner only). Immediately transitions project to dead.
+POST  /api/interact/{project_id}        Auth. Body: { type: "click"|"boost" }. Credits only earned if not own project.
+POST  /api/resurrect/{project_id}       Auth. Costs 200 Credits. Restores unclaimed fossil cells only.
+GET   /api/og/{project_id}              Public. Static OG image PNG (generated at submission, not live).
+GET   /api/share/{project_id}/sos-video Public. Returns signed URL to SOS MP4 (Phase 2).
 ```
 
 ### 5.2 Anti-Abuse Layers
@@ -337,13 +350,27 @@ Step 3 — Push (on approval)
 
 ```json
 {
-  "name": "string",
-  "description": "string",
-  "url": "string (GitHub URL)",
+  "name": "string (required — prompted interactively if not found)",
+  "description": "string (required — prompted interactively if not found)",
+  "url": "string (optional — from git remote origin)",
   "tech_tags": ["string"],
   "github_handle": "string"
 }
 ```
+
+### 8.3 Conflict Handling
+
+If the user already has an alive project, the Skill shows:
+
+```
+You already have an alive project on the Grid:
+  "My Previous App" — 23h 14m remaining, 3 cells
+  
+Abandon it and submit this project instead? (y/n)
+```
+
+Choosing `y` calls `PATCH /api/projects/{id}/abandon` then proceeds with submission.
+Choosing `n` exits cleanly.
 
 ### 8.3 Growth Rationale
 
