@@ -28,7 +28,4 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
-settings = Settings(
-    database_url="postgresql+asyncpg://crow:crow@localhost:5432/crow",
-    redis_url="redis://localhost:6379/0",
-)
+settings = Settings()
