@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from .database import AsyncSessionLocal
 from .services.grid_service import seed_empty_grid
-from .routers import grid, auth as auth_router, projects as projects_router
+from .routers import grid, auth as auth_router, projects as projects_router, interact as interact_router
 
 
 @asynccontextmanager
@@ -16,3 +16,4 @@ app = FastAPI(title="Crow API", lifespan=lifespan)
 app.include_router(grid.router, prefix="/api")
 app.include_router(auth_router.router, prefix="/api")
 app.include_router(projects_router.router, prefix="/api")
+app.include_router(interact_router.router, prefix="/api")
