@@ -1,0 +1,28 @@
+.grid-canvas-wrap {
+  position: relative;
+  display: inline-block;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.grid-canvas {
+  display: block;
+  image-rendering: pixelated;
+  cursor: crosshair;
+}
+
+.dying-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  animation: dying-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes dying-pulse {
+  0%, 100% { background: transparent; }
+  50% { background: rgba(243, 156, 18, 0.08); }
+}
+
+.grid-canvas-wrap--dying {
+  box-shadow: 0 0 20px rgba(243, 156, 18, 0.15);
+}
