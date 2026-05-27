@@ -4,13 +4,13 @@ import { animate } from 'motion/mini';
 import { fetchProject } from '../api/projects';
 import { interact, resurrect } from '../api/interact';
 import { useAuth } from '../hooks/useAuth';
+import { CANVAS_SIZE } from './GridCanvas';
 import { formatTimeLeft } from '../utils/time';
 import type { GridCell } from '../types/api';
 import './HoverCard.css';
 
 const CARD_W = 250;
 const CARD_H = 200;
-const CANVAS_SIZE = 780;
 
 interface Props {
   cell: GridCell;
