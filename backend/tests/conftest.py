@@ -12,6 +12,11 @@ async def engine():
     async with eng.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
+    # Seed empty grid cells (lifespan event doesn't run in tests)
+    from crow.services.grid_service import seed_empty_grid
+    session_factory = async_sessionmaker(eng, expire_on_commit=False)
+    async with session_factory() as session:
+        await seed_empty_grid(session)
     yield eng
     await eng.dispose()
 
