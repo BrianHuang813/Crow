@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function HoverCard({ cell, canvasX, canvasY }: Props) {
-  const { isLoggedIn, userId, credits, setCredits } = useAuth();
+  const { isLoggedIn, userId, credits, adjustCredits } = useAuth();
   const queryClient = useQueryClient();
   const [clickCooldownUntil, setClickCooldownUntil] = useState<number | null>(null);
 
@@ -33,7 +33,7 @@ export function HoverCard({ cell, canvasX, canvasY }: Props) {
   const clickMutation = useMutation({
     mutationFn: () => interact(cell.project_id!, 'click'),
     onSuccess: (result) => {
-      setCredits(credits + result.credits_earned);
+      adjustCredits(result.credits_earned);
       setClickCooldownUntil(Date.now() + 60_000);
       queryClient.invalidateQueries({ queryKey: ['project', cell.project_id] });
       queryClient.invalidateQueries({ queryKey: ['grid'] });
@@ -44,7 +44,7 @@ export function HoverCard({ cell, canvasX, canvasY }: Props) {
   const boostMutation = useMutation({
     mutationFn: () => interact(cell.project_id!, 'boost'),
     onSuccess: () => {
-      setCredits(credits - 20);
+      adjustCredits(-20);
       queryClient.invalidateQueries({ queryKey: ['project', cell.project_id] });
       queryClient.invalidateQueries({ queryKey: ['grid'] });
     },
@@ -53,7 +53,7 @@ export function HoverCard({ cell, canvasX, canvasY }: Props) {
   const resurrectMutation = useMutation({
     mutationFn: () => resurrect(cell.project_id!),
     onSuccess: () => {
-      setCredits(credits - 200);
+      adjustCredits(-200);
       queryClient.invalidateQueries({ queryKey: ['project', cell.project_id] });
       queryClient.invalidateQueries({ queryKey: ['grid'] });
       queryClient.invalidateQueries({ queryKey: ['myProject'] });
@@ -73,8 +73,8 @@ export function HoverCard({ cell, canvasX, canvasY }: Props) {
       animate(
         burst,
         { scale: [0.5, 3], opacity: [1, 0] },
-        { duration: 0.35, easing: 'ease-out' }
-      ).finished.then(() => burst.remove());
+        { duration: 0.35, ease: 'easeOut' }
+      ).then(() => burst.remove());
       clickMutation.mutate();
     },
     [clickMutation]

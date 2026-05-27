@@ -19,6 +19,7 @@ vi.mock('../../hooks/useAuth', async (importOriginal) => {
       logout: vi.fn(),
       login: vi.fn(),
       setCredits: vi.fn(),
+      adjustCredits: vi.fn(),
     }),
   };
 });

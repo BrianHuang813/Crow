@@ -14,7 +14,7 @@ vi.mock('../../hooks/useAuth', async (importOriginal) => {
     useAuth: vi.fn(() => ({
       isLoggedIn: true, handle: 'clicker', credits: 100,
       userId: 'clicker-uuid',   // !== mockProject.owner_id → buttons should show
-      token: 'tok', login: vi.fn(), logout: vi.fn(), setCredits: vi.fn(),
+      token: 'tok', login: vi.fn(), logout: vi.fn(), setCredits: vi.fn(), adjustCredits: vi.fn(),
     })),
   };
 });
@@ -68,6 +68,10 @@ vi.mock('../../api/interact', () => ({
   resurrect: vi.fn(),
 }));
 
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
 const aliveCell: GridCell = {
   x: 5, y: 5, state: 'alive', project_id: 'p-alive', color: '#4a90d9',
 };
@@ -101,16 +105,14 @@ describe('HoverCard interaction buttons', () => {
   });
 
   it('hides Click and Boost buttons when project is owned by current user', async () => {
-    // Override useAuth to return userId matching the project owner
-    vi.mocked(
-      (await import('../../hooks/useAuth')).useAuth
-    ).mockReturnValueOnce({
+    const { useAuth: mockUseAuth } = await import('../../hooks/useAuth');
+    vi.mocked(mockUseAuth).mockReturnValue({
       isLoggedIn: true, handle: 'clicker', credits: 100,
-      userId: 'other-user-uuid',  // now matches mockProject.owner_id
-      token: 'tok', login: vi.fn(), logout: vi.fn(), setCredits: vi.fn(),
+      userId: 'other-user-uuid',  // matches mockProject.owner_id
+      token: 'tok', login: vi.fn(), logout: vi.fn(), setCredits: vi.fn(), adjustCredits: vi.fn(),
     });
     render(<HoverCard cell={aliveCell} canvasX={100} canvasY={100} />, { wrapper });
-    await screen.findByText('Alive Project'); // wait for project to load
+    await screen.findByText('Alive Project');
     expect(screen.queryByRole('button', { name: /click/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /boost/i })).not.toBeInTheDocument();
   });

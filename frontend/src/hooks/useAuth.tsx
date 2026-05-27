@@ -17,6 +17,7 @@ interface AuthContextValue {
   login: (token: string, handle: string) => void;
   logout: () => void;
   setCredits: (credits: number) => void;
+  adjustCredits: (delta: number) => void;
 }
 
 const AuthContext = createContext<AuthContextValue>(null!);
@@ -76,12 +77,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setCreditsState(c);
   }, []);
 
+  const adjustCredits = useCallback((delta: number) => {
+    setCreditsState(c => c + delta);
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
         token, userId, handle, credits,
         isLoggedIn: !!token,
-        login, logout, setCredits,
+        login, logout, setCredits, adjustCredits,
       }}
     >
       {children}
