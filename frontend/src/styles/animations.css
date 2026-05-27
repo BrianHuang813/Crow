@@ -1,0 +1,46 @@
+/* Logo crow blink */
+@keyframes crow-blink {
+  0%, 88%, 100% { opacity: 1; }
+  92%, 96%      { opacity: 0.15; }
+}
+
+/* Typewriter text reveal with caret */
+@keyframes typewriter {
+  from { max-width: 0; }
+  to   { max-width: 200px; }
+}
+@keyframes caret-blink {
+  0%, 100% { border-right-color: var(--accent-2); }
+  50%      { border-right-color: transparent; }
+}
+
+/* Momentum bar pixel fill */
+@keyframes pixel-fill {
+  from { width: 0; }
+}
+
+/* Falling code-rain symbols */
+@keyframes code-fall {
+  0%   { transform: translateY(-60px); opacity: 0; }
+  8%   { opacity: 0.55; }
+  88%  { opacity: 0.55; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* Subtle float for the logo image */
+@keyframes crow-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-3px); }
+}
+
+/* Scan-line wipe for new territory cell */
+@keyframes cell-claim {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+
+/* Pixel burst placeholder */
+@keyframes burst {
+  0%   { transform: scale(0); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}

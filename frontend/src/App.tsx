@@ -3,6 +3,8 @@ import { GridCanvas, pixelToCell } from './components/GridCanvas';
 import { HoverCard } from './components/HoverCard';
 import { LoginButton } from './components/LoginButton';
 import { AuthCallback } from './components/AuthCallback';
+import { CrowLogo } from './components/CrowLogo';
+import { CodeRain } from './components/CodeRain';
 import { useGridPoll } from './hooks/useGridPoll';
 import { useAuth } from './hooks/useAuth';
 import type { GridCell } from './types/api';
@@ -46,8 +48,9 @@ export default function App() {
 
   return (
     <div className="app">
+      <CodeRain />
       <header className="header">
-        <span style={{ fontFamily: 'var(--font-pixel)', fontSize: 24 }}>🐦 crow.gg</span>
+        <CrowLogo />
         <nav className="header-nav">
           {isLoggedIn && <span className="credits-display">₵ {credits}</span>}
           <LoginButton />

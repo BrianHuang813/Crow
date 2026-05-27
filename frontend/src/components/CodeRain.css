@@ -1,0 +1,16 @@
+.code-rain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.code-rain__drop {
+  position: absolute;
+  top: 0;
+  color: var(--accent-2);
+  font-family: var(--font-pixel);
+  animation: code-fall linear infinite;
+  will-change: transform;
+}

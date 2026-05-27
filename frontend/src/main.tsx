@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './hooks/useAuth';
 import App from './App';
 import './styles/global.css';
+import './styles/animations.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
