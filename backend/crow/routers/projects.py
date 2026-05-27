@@ -117,3 +117,67 @@ async def abandon_project(
     await db.refresh(project)
     await invalidate_cache(r)
     return project
+
+
+@router.post("/resurrect/{project_id}", response_model=ProjectOut)
+async def resurrect_project(
+    project_id: str,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+    r: redis.Redis = Depends(get_redis),
+):
+    result = await db.execute(select(Project).where(Project.id == project_id))
+    project = result.scalar_one_or_none()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    if project.status != "dead":
+        raise HTTPException(status_code=409, detail="Only dead projects can be resurrected")
+
+    # Enforce 1-project limit for the calling user
+    existing = await db.execute(
+        select(Project).where(Project.owner_id == user.id, Project.status.in_(["alive", "dying"]))
+    )
+    if existing.scalar_one_or_none():
+        raise HTTPException(status_code=409, detail="Abandon your current project before resurrecting another")
+
+    if user.credits < settings.resurrection_credit_cost:
+        raise HTTPException(
+            status_code=402,
+            detail=f"Need {settings.resurrection_credit_cost} Credits to resurrect (you have {user.credits})",
+        )
+
+    user.credits -= settings.resurrection_credit_cost
+    user.resurrection_count += 1
+
+    # Restore surviving fossil cells belonging to this project
+    cells_result = await db.execute(
+        select(GridCell).where(GridCell.project_id == project.id, GridCell.state == "fossil")
+    )
+    surviving_cells = cells_result.scalars().all()
+
+    if not surviving_cells:
+        # All cells were claimed; take one random empty cell instead
+        cell = await _get_random_empty_cell(db)
+        if cell is None:
+            raise HTTPException(status_code=503, detail="Grid is full — cannot resurrect")
+        cell.project_id = project.id
+        cell.state = "alive"
+        cell.claimed_at = datetime.now(timezone.utc)
+        surviving_cells = [cell]
+
+    for cell in surviving_cells:
+        cell.state = "alive"
+
+    original_id = project.resurrected_from if project.resurrected_from else project.id
+    project.status = "alive"
+    project.expires_at = datetime.now(timezone.utc) + timedelta(hours=settings.resurrection_lifespan_hours)
+    project.momentum = 0
+    project.territory_size = len(surviving_cells)
+    project.died_at = None
+    project.owner_id = user.id
+    project.resurrected_from = original_id
+
+    await db.commit()
+    await db.refresh(project)
+    await invalidate_cache(r)
+    return project
