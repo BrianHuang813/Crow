@@ -1,21 +1,25 @@
 import { useState, useCallback, useMemo, useRef } from 'react';
 import { GridCanvas, pixelToCell } from './components/GridCanvas';
 import { HoverCard } from './components/HoverCard';
+import { LoginButton } from './components/LoginButton';
+import { AuthCallback } from './components/AuthCallback';
 import { useGridPoll } from './hooks/useGridPoll';
+import { useAuth } from './hooks/useAuth';
 import type { GridCell } from './types/api';
 
 export default function App() {
+  const { isLoggedIn, credits } = useAuth();
   const { data: snapshot, isLoading, isError } = useGridPoll();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hoveredCell, setHoveredCell] = useState<GridCell | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
-  // O(1) cell lookup — rebuilt only when snapshot changes (every 15s)
+  const isCallbackPage = window.location.pathname === '/auth/callback';
+  if (isCallbackPage) return <AuthCallback />;
+
   const cellMap = useMemo(() => {
     const m = new Map<string, GridCell>();
-    for (const c of snapshot?.cells ?? []) {
-      m.set(`${c.x},${c.y}`, c);
-    }
+    for (const c of snapshot?.cells ?? []) m.set(`${c.x},${c.y}`, c);
     return m;
   }, [snapshot]);
 
@@ -31,48 +35,32 @@ export default function App() {
         const cellData = cellMap.get(`${cell.x},${cell.y}`);
         if (cellData) {
           setHoveredCell(cellData);
-          setHoverPos({
-            x: e.clientX - wrapperRect.left,
-            y: e.clientY - wrapperRect.top,
-          });
+          setHoverPos({ x: e.clientX - wrapperRect.left, y: e.clientY - wrapperRect.top });
         }
       }
-      // pixelToCell null (mouse over HoverCard) → keep current cell shown
     },
     [cellMap]
   );
 
-  const handleMouseLeave = useCallback(() => {
-    setHoveredCell(null);
-  }, []);
+  const handleMouseLeave = useCallback(() => setHoveredCell(null), []);
 
   return (
     <div className="app">
       <header className="header">
-        <span style={{ fontFamily: 'var(--font-pixel)', fontSize: 24 }}>
-          🐦 crow.gg
-        </span>
+        <span style={{ fontFamily: 'var(--font-pixel)', fontSize: 24 }}>🐦 crow.gg</span>
+        <nav className="header-nav">
+          {isLoggedIn && <span className="credits-display">₵ {credits}</span>}
+          <LoginButton />
+        </nav>
       </header>
       <main className="main">
-        {isLoading && (
-          <p className="grid-status">LOADING GRID...</p>
-        )}
-        {isError && (
-          <p className="grid-status grid-status--error">GRID OFFLINE — retrying...</p>
-        )}
+        {isLoading && <p className="grid-status">LOADING GRID...</p>}
+        {isError && <p className="grid-status grid-status--error">GRID OFFLINE — retrying...</p>}
         {!isLoading && !isError && (
-          <div
-            className="grid-outer"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-          >
+          <div className="grid-outer" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
             <GridCanvas canvasRef={canvasRef} snapshot={snapshot} />
             {hoveredCell && (
-              <HoverCard
-                cell={hoveredCell}
-                canvasX={hoverPos.x}
-                canvasY={hoverPos.y}
-              />
+              <HoverCard cell={hoveredCell} canvasX={hoverPos.x} canvasY={hoverPos.y} />
             )}
           </div>
         )}
