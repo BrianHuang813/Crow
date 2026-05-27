@@ -45,6 +45,10 @@ const wrapper =
     </QueryClientProvider>
   );
 
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
 describe('ProjectPanel — no project', () => {
   it('shows submit form when user has no active project', async () => {
     vi.mocked(fetchMyProject).mockResolvedValue(null);
