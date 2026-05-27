@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     model_config = ConfigDict(env_file=".env")
     database_url: str
     redis_url: str
+    frontend_url: str = "http://localhost:5173"
     github_client_id: str = "placeholder"
     github_client_secret: str = "placeholder"
     jwt_secret: str = "dev-secret-change-in-prod"

@@ -6,7 +6,7 @@ from sqlalchemy import select
 from ..config import settings
 from ..database import get_db
 from ..models import User
-from ..auth import create_token
+from ..auth import create_token, get_current_user
 
 router = APIRouter(prefix="/auth")
 
@@ -58,7 +58,11 @@ async def github_callback(code: str, db: AsyncSession = Depends(get_db)):
         await db.commit()
         await db.refresh(user)
 
-    return {"token": create_token(str(user.id)), "handle": user.handle}
+    jwt_token = create_token(str(user.id))
+    return RedirectResponse(
+        f"{settings.frontend_url}/auth/callback"
+        f"?token={jwt_token}&handle={user.handle}"
+    )
 
 
 # --- Device Flow (for Crow Submit Skill) ---
@@ -115,3 +119,15 @@ async def device_token(device_code: str, db: AsyncSession = Depends(get_db)):
         await db.refresh(user)
 
     return {"token": create_token(str(user.id)), "handle": user.handle}
+
+
+@router.get("/me")
+async def get_me(user: User = Depends(get_current_user)):
+    return {
+        "id": str(user.id),
+        "handle": user.handle,
+        "email": user.email,
+        "avatar_url": user.avatar_url,
+        "credits": user.credits,
+        "resurrection_count": user.resurrection_count,
+    }
