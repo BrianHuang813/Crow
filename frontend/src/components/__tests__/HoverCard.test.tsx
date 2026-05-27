@@ -1,8 +1,20 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from '../../hooks/useAuth';
 import { HoverCard } from '../HoverCard';
 import type { GridCell, Project } from '../../types/api';
+
+vi.mock('../../hooks/useAuth', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../hooks/useAuth')>();
+  return {
+    ...actual,
+    useAuth: vi.fn(() => ({
+      isLoggedIn: false, handle: null, credits: 0,
+      userId: null, token: null, login: vi.fn(), logout: vi.fn(), setCredits: vi.fn(),
+    })),
+  };
+});
 
 vi.mock('../../api/projects', () => ({
   fetchProject: vi.fn().mockResolvedValue({
@@ -24,7 +36,9 @@ vi.mock('../../api/projects', () => ({
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={qc}>{children}</QueryClientProvider>
+  <QueryClientProvider client={qc}>
+    <AuthProvider>{children}</AuthProvider>
+  </QueryClientProvider>
 );
 
 const aliveCell: GridCell = {
