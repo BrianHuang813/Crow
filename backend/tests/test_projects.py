@@ -97,3 +97,21 @@ async def test_get_project_not_found(client):
 async def test_unauthenticated_cannot_create_project(client):
     resp = await client.post("/api/projects", json={"name": "Sneaky"})
     assert resp.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_og_card_returns_png(client, auth_headers):
+    create_resp = await client.post(
+        "/api/projects", json={"name": "OG Test", "tech_tags": ["Go", "Python"]}, headers=auth_headers
+    )
+    project_id = create_resp.json()["id"]
+    resp = await client.get(f"/api/og/{project_id}")
+    assert resp.status_code == 200
+    assert resp.headers["content-type"] == "image/png"
+    assert len(resp.content) > 1000  # non-trivial PNG
+
+
+@pytest.mark.asyncio
+async def test_og_card_404_for_missing(client):
+    resp = await client.get("/api/og/00000000-0000-0000-0000-000000000000")
+    assert resp.status_code == 404
