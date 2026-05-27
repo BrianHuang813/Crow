@@ -1,6 +1,8 @@
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 
 class Settings(BaseSettings):
+    model_config = ConfigDict(env_file=".env")
     database_url: str
     redis_url: str
     github_client_id: str = "placeholder"
@@ -24,8 +26,5 @@ class Settings(BaseSettings):
     grid_width: int = 60
     grid_height: int = 60
     grid_cache_ttl_seconds: int = 30
-
-    class Config:
-        env_file = ".env"
 
 settings = Settings()
