@@ -107,7 +107,7 @@ html, body, #root {
 .input:focus { border-color: var(--accent-2); }
 
 .badge {
-  font-size: 11px; padding: 2px 7px;
+  padding: 2px 7px;
   border-radius: 999px; font-family: var(--font-pixel); font-size: 14px;
 }
 .badge--alive { background: rgba(46, 204, 113, 0.2); color: var(--alive); }
