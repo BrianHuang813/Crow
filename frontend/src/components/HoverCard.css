@@ -1,0 +1,73 @@
+.hover-card {
+  position: absolute;
+  width: 230px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 20;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.hover-card--dying {
+  border-color: var(--dying);
+  box-shadow: 0 4px 20px rgba(243, 156, 18, 0.2);
+}
+
+.hover-card__color-bar {
+  height: 3px;
+  background: var(--project-color, var(--accent));
+}
+
+.hover-card__body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hover-card__name {
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hover-card__timer {
+  font-family: var(--font-pixel);
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.hover-card--dying .hover-card__timer { color: var(--dying); }
+
+.hover-card__momentum-wrap {
+  height: 4px;
+  background: var(--surface-2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.hover-card__momentum-fill {
+  height: 100%;
+  background: var(--project-color, var(--accent));
+  transition: width 0.3s ease;
+}
+
+.hover-card__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.hover-card__tags {
+  font-size: 11px;
+  color: var(--accent-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
