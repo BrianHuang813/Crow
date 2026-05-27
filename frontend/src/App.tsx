@@ -5,6 +5,7 @@ import { LoginButton } from './components/LoginButton';
 import { AuthCallback } from './components/AuthCallback';
 import { CrowLogo } from './components/CrowLogo';
 import { CodeRain } from './components/CodeRain';
+import { ProjectPanel } from './components/ProjectPanel';
 import { useGridPoll } from './hooks/useGridPoll';
 import { useAuth } from './hooks/useAuth';
 import type { GridCell } from './types/api';
@@ -18,6 +19,26 @@ export default function App() {
 
   const isCallbackPage = window.location.pathname === '/auth/callback';
   if (isCallbackPage) return <AuthCallback />;
+
+  // Mobile guard — desktop-only experience
+  if (window.innerWidth <= 820) {
+    return (
+      <div className="mobile-guard" style={{
+        height: '100vh', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        gap: 16, padding: 24, textAlign: 'center',
+      }}>
+        <span style={{ fontSize: 48 }}>🐦</span>
+        <p style={{ fontFamily: 'var(--font-pixel)', fontSize: 22, color: 'var(--accent-2)' }}>
+          CROW.GG
+        </p>
+        <p style={{ color: 'var(--text-muted)', fontSize: 13, maxWidth: 280 }}>
+          Digital Darwinism is a desktop experience.<br />
+          Open on your computer to enter the grid.
+        </p>
+      </div>
+    );
+  }
 
   const cellMap = useMemo(() => {
     const m = new Map<string, GridCell>();
@@ -40,6 +61,7 @@ export default function App() {
           setHoverPos({ x: e.clientX - wrapperRect.left, y: e.clientY - wrapperRect.top });
         }
       }
+      // pixelToCell null → keep current cell (mouse may be over HoverCard button)
     },
     [cellMap]
   );
@@ -47,7 +69,7 @@ export default function App() {
   const handleMouseLeave = useCallback(() => setHoveredCell(null), []);
 
   return (
-    <div className="app">
+    <div className="app app-desktop">
       <CodeRain />
       <header className="header">
         <CrowLogo />
@@ -56,17 +78,20 @@ export default function App() {
           <LoginButton />
         </nav>
       </header>
-      <main className="main">
-        {isLoading && <p className="grid-status">LOADING GRID...</p>}
-        {isError && <p className="grid-status grid-status--error">GRID OFFLINE — retrying...</p>}
-        {!isLoading && !isError && (
-          <div className="grid-outer" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-            <GridCanvas canvasRef={canvasRef} snapshot={snapshot} />
-            {hoveredCell && (
-              <HoverCard cell={hoveredCell} canvasX={hoverPos.x} canvasY={hoverPos.y} />
-            )}
-          </div>
-        )}
+      <main className="main main--row">
+        <div className="grid-section">
+          {isLoading && <p className="grid-status">LOADING GRID...</p>}
+          {isError && <p className="grid-status grid-status--error">GRID OFFLINE — retrying...</p>}
+          {!isLoading && !isError && (
+            <div className="grid-outer" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+              <GridCanvas canvasRef={canvasRef} snapshot={snapshot} />
+              {hoveredCell && (
+                <HoverCard cell={hoveredCell} canvasX={hoverPos.x} canvasY={hoverPos.y} />
+              )}
+            </div>
+          )}
+        </div>
+        {isLoggedIn && <ProjectPanel />}
       </main>
     </div>
   );
