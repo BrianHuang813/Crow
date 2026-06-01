@@ -125,8 +125,8 @@ Read every file that exists. Then use your judgment to extract values for these 
 
 | Variable | Source | Rules |
 |---|---|---|
-| `PROJ_NAME` | `package.json → .name`, `pyproject.toml → [project].name`, `Cargo.toml → [package].name`, `README.md → first # heading` | Required. Use the exact string from the file. |
-| `PROJ_DESC` | `package.json → .description`, `pyproject.toml → [project].description`, `Cargo.toml → [package].description`, `README.md → first paragraph after heading` | Optional. Truncate to 200 chars. Empty string if not found. |
+| `PROJ_NAME` | `package.json → .name`, `pyproject.toml → [project].name or [tool.poetry].name`, `Cargo.toml → [package].name`, `README.md → first # heading` | Required. Use the exact string from the file. |
+| `PROJ_DESC` | `package.json → .description`, `pyproject.toml → [project].description or [tool.poetry].description`, `Cargo.toml → [package].description`, `README.md → first paragraph after heading` | Optional. Truncate to 200 chars. Empty string if not found. |
 | `PROJ_URL` | `package.json → .homepage`, `pyproject.toml → [project.urls].Homepage`, `Cargo.toml → [package].homepage`, `README.md → first demo/homepage URL` | Optional. Must start with `http://` or `https://`. Empty string if not found or invalid. |
 | `PROJ_TAGS` | Derived from all files | Optional. At most 5 comma-separated tags. Prioritise: programming language, primary framework, key infrastructure. Skip dev-only tools (eslint, prettier, pytest, jest). Empty string if nothing meaningful found. |
 
@@ -135,13 +135,15 @@ Read every file that exists. Then use your judgment to extract values for these 
 - `pyproject.toml` with fastapi + sqlalchemy + redis → `"Python,FastAPI,SQLAlchemy,Redis"`
 - `Cargo.toml` with tokio + axum → `"Rust,Tokio,Axum"`
 
-After reading the files and deciding on values, set the shell variables:
+After reading the files and deciding on values, substitute your detected values into this block, then run it. Use `""` for any value you couldn't determine:
 
 ```bash
-PROJ_NAME="<detected value or empty>"
-PROJ_DESC="<detected value or empty>"
-PROJ_URL="<detected value or empty>"
-PROJ_TAGS="<tag1,tag2,tag3 or empty>"
+PROJ_NAME=""   # required — e.g. "Crow"
+PROJ_DESC=""   # optional, ≤200 chars
+PROJ_URL=""    # optional, must be http(s):// or empty
+PROJ_TAGS=""   # optional, ≤5 comma-separated, e.g. "Python,FastAPI,PostgreSQL"
 ```
+
+Try sources in the order listed; use the first non-empty value found.
 
 If no project files exist at all and `PROJ_NAME` is still empty, set it to empty string — Step 3 will prompt the user to fill it in.
