@@ -1,5 +1,7 @@
 # Crow
 
+[繁體中文](README.zh-TW.md)
+
 **Your project lives or dies by the crowd.**
 
 Crow is a platform where developer projects compete for survival on a shared 60×60 grid. Every project starts with a 48-hour clock and a single cell. Interactions from other developers add time and momentum — enough momentum and your project expands, claiming more territory. Stop getting interactions and your project dies, leaving fossils behind.
@@ -65,3 +67,15 @@ Go to [crow.gg](https://crow.gg), log in with GitHub, and submit your project fr
 | **Click** | Anyone (not the owner) | +5 momentum and +300s to the project, +5 credits to you. 60s cooldown per project. |
 | **Boost** | Anyone (not the owner) | Costs 20 credits. +25 momentum and +1800s to the project. |
 | **Resurrect** | Anyone | Costs 200 credits. Restarts a dead project with a 24-hour clock. |
+
+---
+
+## Contributing
+
+Crow is open source. The best way to contribute is to use the platform — submit your project, interact with others, and help the grid stay alive.
+
+Beyond that:
+
+- **Found a bug or have an idea?** Open an issue on [GitHub](https://github.com/brianhuang/crow/issues).
+- **Want to improve the `/crow-submit` skill?** The skill is a single Markdown file at [`skill/crow-submit.md`](skill/crow-submit.md). Edit it and open a pull request.
+- **Want to contribute to the platform?** Check open issues for things tagged `good first issue`, or open a discussion about what you'd like to build.
