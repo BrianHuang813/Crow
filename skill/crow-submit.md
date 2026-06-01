@@ -226,3 +226,150 @@ print(','.join(tags[:5]))
   Return to **STEP 3 LOOP TOP** — re-run both the preview-table block and the prompt block.
 
 - **Any other input:** Print `"  Unknown field. Type name / description / url / tech_tags, or Y/n."` and return to **STEP 3 LOOP TOP** — re-run both the preview-table block and the prompt block.
+
+---
+
+## Step 4 — Submit
+
+Build the JSON request body using environment variables and a Python heredoc (avoids shell quoting issues):
+
+```bash
+export PROJ_NAME PROJ_DESC PROJ_URL PROJ_TAGS
+
+python3 - <<'PYEOF'
+import json, os
+
+body = {'name': os.environ['PROJ_NAME']}
+desc = os.environ.get('PROJ_DESC', '').strip()
+url  = os.environ.get('PROJ_URL', '').strip()
+tags_raw = os.environ.get('PROJ_TAGS', '').strip()
+
+if desc: body['description'] = desc
+if url:  body['url'] = url
+if tags_raw:
+    body['tech_tags'] = [t.strip() for t in tags_raw.split(',') if t.strip()][:5]
+
+with open('/tmp/.crow_body.json', 'w') as f:
+    json.dump(body, f)
+PYEOF
+```
+
+Submit to the API:
+
+```bash
+SUBMIT_FILE=$(mktemp -t crow_submit)
+trap 'rm -f "$SUBMIT_FILE"' EXIT
+
+SUBMIT_STATUS=$(curl -s -o "$SUBMIT_FILE" -w "%{http_code}" \
+  -X POST "$CROW_API/api/projects" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d @/tmp/.crow_body.json)
+SUBMIT_BODY=$(cat "$SUBMIT_FILE")
+```
+
+**Handle 201 — Success:**
+
+```bash
+if [ "$SUBMIT_STATUS" = "201" ]; then
+  PROJ_ID=$(echo "$SUBMIT_BODY"      | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+  PROJ_COLOR=$(echo "$SUBMIT_BODY"   | python3 -c "import sys,json; print(json.load(sys.stdin)['color'])")
+  PROJ_EXPIRES=$(echo "$SUBMIT_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin)['expires_at'])")
+  PROJ_CELLS=$(echo "$SUBMIT_BODY"   | python3 -c "import sys,json; print(json.load(sys.stdin)['territory_size'])")
+
+  echo ""
+  echo "  ╔════════════════════════════════════════════════════════╗"
+  echo "  ║  ✓ Your project is live on the Crow Grid!             ║"
+  echo "  ╠════════════════════════════════════════════════════════╣"
+  printf "  ║  Name:    %-46s║\n" "$PROJ_NAME"
+  printf "  ║  Color:   %-46s║\n" "$PROJ_COLOR"
+  printf "  ║  Expires: %-46s║\n" "$PROJ_EXPIRES"
+  printf "  ║  Cells:   %-46s║\n" "$PROJ_CELLS cell(s) claimed"
+  echo "  ║                                                        ║"
+  CROW_BASE="${CROW_API%/api*}"
+  printf "  ║  → %s/p/%-37s║\n" "$CROW_BASE" "$PROJ_ID"
+  echo "  ╚════════════════════════════════════════════════════════╝"
+  echo ""
+fi
+```
+
+**Handle 409 — User already has an active project:**
+
+```bash
+if [ "$SUBMIT_STATUS" = "409" ]; then
+  echo ""
+  echo "  ✗ You already have an active project."
+  echo "  Fetching it..."
+
+  MINE_FILE=$(mktemp -t crow_mine)
+  MINE_STATUS=$(curl -s -o "$MINE_FILE" -w "%{http_code}" \
+    "$CROW_API/api/projects/mine" \
+    -H "Authorization: Bearer $TOKEN")
+  MINE_BODY=$(cat "$MINE_FILE")
+  rm -f "$MINE_FILE"
+
+  EXISTING_NAME=$(echo "$MINE_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin)['name'])")
+  EXISTING_ID=$(echo "$MINE_BODY"   | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+  EXISTING_EXP=$(echo "$MINE_BODY"  | python3 -c "import sys,json; print(json.load(sys.stdin)['expires_at'])")
+
+  echo ""
+  printf "  Current:  %s\n" "$EXISTING_NAME"
+  printf "  Expires:  %s\n" "$EXISTING_EXP"
+  echo ""
+  echo "  Abandon '$EXISTING_NAME' and submit '$PROJ_NAME' instead? (y/N)"
+  read -r ABANDON_INPUT
+
+  if [ "$ABANDON_INPUT" = "y" ] || [ "$ABANDON_INPUT" = "Y" ]; then
+    ABANDON_FILE=$(mktemp -t crow_abandon)
+    ABANDON_STATUS=$(curl -s -o "$ABANDON_FILE" -w "%{http_code}" \
+      -X PATCH "$CROW_API/api/projects/$EXISTING_ID/abandon" \
+      -H "Authorization: Bearer $TOKEN")
+    rm -f "$ABANDON_FILE"
+
+    if [ "$ABANDON_STATUS" = "200" ]; then
+      echo "  ✓ Abandoned. Submitting '$PROJ_NAME'..."
+      # Re-run the submission block above (starting from the python3 body-builder)
+    else
+      ABANDON_DETAIL=$(cat "$ABANDON_FILE" | python3 -c "import sys,json; print(json.load(sys.stdin).get('detail','Unknown error'))" 2>/dev/null)
+      echo "  ✗ Failed to abandon: $ABANDON_DETAIL"
+      exit 1
+    fi
+  else
+    echo "  Cancelled. Your current project is unchanged."
+    exit 0
+  fi
+fi
+```
+
+**Handle 401 — Token expired:**
+
+```bash
+if [ "$SUBMIT_STATUS" = "401" ]; then
+  echo "  ⟳ Token expired — re-authenticating..."
+  rm -f "$TOKEN_FILE"
+  TOKEN=""
+  HANDLE=""
+  # Re-run Step 1 Device Flow block to get a fresh TOKEN and HANDLE
+  # Then re-run Step 4 starting from the body-builder
+fi
+```
+
+**Handle 503 — Grid is full:**
+
+```bash
+if [ "$SUBMIT_STATUS" = "503" ]; then
+  echo ""
+  echo "  ✗ The Crow Grid is currently full — no empty cells available."
+  echo "  Try again when another project dies (usually within a few hours)."
+  echo ""
+  exit 0
+fi
+```
+
+**Handle any other error:**
+
+```bash
+DETAIL=$(echo "$SUBMIT_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin).get('detail','Unknown error'))" 2>/dev/null)
+echo "  ✗ Submission failed (HTTP $SUBMIT_STATUS): $DETAIL"
+exit 1
+```
