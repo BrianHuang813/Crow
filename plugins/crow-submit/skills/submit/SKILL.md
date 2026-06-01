@@ -1,5 +1,4 @@
 ---
-name: crow-submit
 description: Submit your project to the Crow Digital Darwinism grid. Authenticates via GitHub Device Flow, detects project info automatically, and guides you through the full submission flow.
 ---
 

@@ -1,0 +1,15 @@
+{
+  "name": "crow",
+  "owner": {
+    "name": "Brian Huang",
+    "email": "brian910813@gmail.com"
+  },
+  "description": "Plugins for the Crow Digital Darwinism platform.",
+  "plugins": [
+    {
+      "name": "crow-submit",
+      "source": "./plugins/crow-submit",
+      "description": "Submit your project to the Crow grid from your terminal."
+    }
+  ]
+}

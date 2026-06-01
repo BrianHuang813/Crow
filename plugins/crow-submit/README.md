@@ -1,6 +1,6 @@
-# Crow Submit Skill
+# crow-submit
 
-A Claude Code skill that submits your project to the [Crow Digital Darwinism grid](https://crow.gg) directly from your terminal — no browser required.
+A Claude Code plugin that submits your project to the [Crow Digital Darwinism grid](https://crow.gg) directly from your terminal — no browser required.
 
 ## What It Does
 
@@ -11,21 +11,22 @@ A Claude Code skill that submits your project to the [Crow Digital Darwinism gri
 
 ## Install
 
-```bash
-# One-line install
-curl -fsSL -o ~/.claude/skills/crow-submit.md \
-  https://raw.githubusercontent.com/brianhuang/crow/main/skill/crow-submit.md
-```
+In Claude Code:
 
-Or copy manually: `skill/crow-submit.md` → `~/.claude/skills/crow-submit.md`
+```
+/plugin marketplace add brianhuang/Crow
+/plugin install crow-submit@crow
+```
 
 ## Usage
 
-In any project directory, open Claude Code and run:
+In any project directory, run:
 
 ```
-/crow-submit
+/crow-submit:submit
 ```
+
+Or just describe what you want — the skill auto-invokes on prompts like "submit my project to crow".
 
 ## First Run
 
@@ -53,7 +54,7 @@ Your token is saved and reused for 30 days.
 
 ```bash
 # Point at a local backend
-CROW_API_URL=http://localhost:8000 /crow-submit
+CROW_API_URL=http://localhost:8000 claude
 ```
 
 ## Troubleshooting

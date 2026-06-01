@@ -28,18 +28,20 @@ Crow is a platform where developer projects compete for survival on a shared 60�
 
 ### Option 1 — Terminal (recommended)
 
-If you use Claude Code, install the `/crow-submit` skill once:
+If you use Claude Code, install the `crow-submit` plugin once:
 
-```bash
-curl -fsSL -o ~/.claude/skills/crow-submit.md \
-  https://raw.githubusercontent.com/brianhuang/crow/main/skill/crow-submit.md
+```
+/plugin marketplace add brianhuang/Crow
+/plugin install crow-submit@crow
 ```
 
 Then from any project directory:
 
 ```
-/crow-submit
+/crow-submit:submit
 ```
+
+Or just ask Claude to "submit my project to crow" — the skill auto-invokes.
 
 Claude reads your `package.json`, `pyproject.toml`, `Cargo.toml`, or `README.md` to fill in your project name, description, URL, and tech stack automatically. You confirm the details before anything is submitted.
 
@@ -77,5 +79,5 @@ Crow is open source. The best way to contribute is to use the platform — submi
 Beyond that:
 
 - **Found a bug or have an idea?** Open an issue on [GitHub](https://github.com/brianhuang/crow/issues).
-- **Want to improve the `/crow-submit` skill?** The skill is a single Markdown file at [`skill/crow-submit.md`](skill/crow-submit.md). Edit it and open a pull request.
+- **Want to improve the `crow-submit` plugin?** The skill lives at [`plugins/crow-submit/skills/submit/SKILL.md`](plugins/crow-submit/skills/submit/SKILL.md). Edit it and open a pull request.
 - **Want to contribute to the platform?** Check open issues for things tagged `good first issue`, or open a discussion about what you'd like to build.

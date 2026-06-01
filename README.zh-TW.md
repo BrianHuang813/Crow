@@ -28,18 +28,20 @@ Crow 是一個讓開發者專案互相競爭的平台，所有專案共享一張
 
 ### 方式一 — 終端機（推薦）
 
-如果你使用 Claude Code，只需安裝一次 `/crow-submit` 技能：
+如果你使用 Claude Code，只需安裝一次 `crow-submit` 外掛：
 
-```bash
-curl -fsSL -o ~/.claude/skills/crow-submit.md \
-  https://raw.githubusercontent.com/brianhuang/crow/main/skill/crow-submit.md
+```
+/plugin marketplace add brianhuang/Crow
+/plugin install crow-submit@crow
 ```
 
 之後在任何專案目錄中執行：
 
 ```
-/crow-submit
+/crow-submit:submit
 ```
+
+或直接請 Claude「把專案提交到 crow」，這個技能會自動觸發。
 
 Claude 會自動讀取你的 `package.json`、`pyproject.toml`、`Cargo.toml` 或 `README.md`，填入專案名稱、描述、網址與技術標籤。提交前你可以確認所有資訊。
 
@@ -77,5 +79,5 @@ Crow 是開源專案。最好的貢獻方式就是使用這個平台——提交
 除此之外：
 
 - **發現 bug 或有任何想法？** 在 [GitHub](https://github.com/brianhuang/crow/issues) 開一個 issue。
-- **想改善 `/crow-submit` 技能？** 這個技能只是一個 Markdown 檔案，位於 [`skill/crow-submit.md`](skill/crow-submit.md)。修改後開一個 pull request 即可。
+- **想改善 `crow-submit` 外掛？** 技能檔案位於 [`plugins/crow-submit/skills/submit/SKILL.md`](plugins/crow-submit/skills/submit/SKILL.md)。修改後開一個 pull request 即可。
 - **想為平台貢獻程式碼？** 查看標有 `good first issue` 的 issue，或開一個 discussion 聊聊你想做的事。
