@@ -110,3 +110,38 @@ HANDLE=""
 ```
 
 Then re-run the Device Flow block above to get a fresh token, and retry the API call.
+
+---
+
+## Step 2 — Detect Project Info
+
+Check which project definition files exist in the current directory:
+
+```bash
+ls package.json pyproject.toml Cargo.toml README.md 2>/dev/null
+```
+
+Read every file that exists. Then use your judgment to extract values for these four variables:
+
+| Variable | Source | Rules |
+|---|---|---|
+| `PROJ_NAME` | `package.json → .name`, `pyproject.toml → [project].name`, `Cargo.toml → [package].name`, `README.md → first # heading` | Required. Use the exact string from the file. |
+| `PROJ_DESC` | `package.json → .description`, `pyproject.toml → [project].description`, `Cargo.toml → [package].description`, `README.md → first paragraph after heading` | Optional. Truncate to 200 chars. Empty string if not found. |
+| `PROJ_URL` | `package.json → .homepage`, `pyproject.toml → [project.urls].Homepage`, `Cargo.toml → [package].homepage`, `README.md → first demo/homepage URL` | Optional. Must start with `http://` or `https://`. Empty string if not found or invalid. |
+| `PROJ_TAGS` | Derived from all files | Optional. At most 5 comma-separated tags. Prioritise: programming language, primary framework, key infrastructure. Skip dev-only tools (eslint, prettier, pytest, jest). Empty string if nothing meaningful found. |
+
+**Examples of good tech_tags extraction:**
+- `package.json` with react + express + pg → `"JavaScript,React,Express,PostgreSQL"`
+- `pyproject.toml` with fastapi + sqlalchemy + redis → `"Python,FastAPI,SQLAlchemy,Redis"`
+- `Cargo.toml` with tokio + axum → `"Rust,Tokio,Axum"`
+
+After reading the files and deciding on values, set the shell variables:
+
+```bash
+PROJ_NAME="<detected value or empty>"
+PROJ_DESC="<detected value or empty>"
+PROJ_URL="<detected value or empty>"
+PROJ_TAGS="<tag1,tag2,tag3 or empty>"
+```
+
+If no project files exist at all and `PROJ_NAME` is still empty, set it to empty string — Step 3 will prompt the user to fill it in.
