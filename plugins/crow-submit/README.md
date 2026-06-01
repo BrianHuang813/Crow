@@ -14,7 +14,7 @@ A Claude Code plugin that submits your project to the [Crow Digital Darwinism gr
 In Claude Code:
 
 ```
-/plugin marketplace add brianhuang/Crow
+/plugin marketplace add BrianHuang813/Crow
 /plugin install crow-submit@crow
 ```
 

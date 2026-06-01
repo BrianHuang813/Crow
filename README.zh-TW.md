@@ -31,7 +31,7 @@ Crow 是一個讓開發者專案互相競爭的平台，所有專案共享一張
 如果你使用 Claude Code，只需安裝一次 `crow-submit` 外掛：
 
 ```
-/plugin marketplace add brianhuang/Crow
+/plugin marketplace add BrianHuang813/Crow
 /plugin install crow-submit@crow
 ```
 
@@ -78,6 +78,6 @@ Crow 是開源專案。最好的貢獻方式就是使用這個平台——提交
 
 除此之外：
 
-- **發現 bug 或有任何想法？** 在 [GitHub](https://github.com/brianhuang/crow/issues) 開一個 issue。
+- **發現 bug 或有任何想法？** 在 [GitHub](https://github.com/BrianHuang813/Crow/issues) 開一個 issue。
 - **想改善 `crow-submit` 外掛？** 技能檔案位於 [`plugins/crow-submit/skills/submit/SKILL.md`](plugins/crow-submit/skills/submit/SKILL.md)。修改後開一個 pull request 即可。
 - **想為平台貢獻程式碼？** 查看標有 `good first issue` 的 issue，或開一個 discussion 聊聊你想做的事。
