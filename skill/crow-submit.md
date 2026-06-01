@@ -63,21 +63,26 @@ echo -n "  Waiting for authorization"
 Poll until authorized:
 
 ```bash
+POLL_FILE=$(mktemp -t crow_poll)
+trap 'rm -f "$POLL_FILE"' EXIT
+
 while true; do
   sleep "$INTERVAL"
   printf "."
 
-  POLL_STATUS=$(curl -s -o /tmp/.crow_poll -w "%{http_code}" \
+  POLL_STATUS=$(curl -s -o "$POLL_FILE" -w "%{http_code}" \
     -X POST "$CROW_API/api/auth/device/token?device_code=$DEVICE_CODE")
-  POLL_BODY=$(cat /tmp/.crow_poll)
+  POLL_BODY=$(cat "$POLL_FILE")
 
   if [ "$POLL_STATUS" = "200" ]; then
     TOKEN=$(echo "$POLL_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
     HANDLE=$(echo "$POLL_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin)['handle'])")
     mkdir -p "$HOME/.crow"
-    python3 -c "
-import json, sys
-json.dump({'token': '$TOKEN', 'handle': '$HANDLE'}, open('$HOME/.crow/token', 'w'))
+    TOKEN="$TOKEN" HANDLE="$HANDLE" python3 -c "
+import json, os
+path = os.path.expanduser('~/.crow/token')
+json.dump({'token': os.environ['TOKEN'], 'handle': os.environ['HANDLE']}, open(path, 'w'))
+os.chmod(path, 0o600)
 "
     echo ""
     echo "  ✓ Logged in as @$HANDLE"
