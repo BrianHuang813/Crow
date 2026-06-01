@@ -235,6 +235,9 @@ Build the JSON request body using environment variables and a Python heredoc (av
 
 ```bash
 export PROJ_NAME PROJ_DESC PROJ_URL PROJ_TAGS
+BODY_FILE=$(mktemp -t crow_body)
+export BODY_FILE
+trap 'rm -f "$BODY_FILE"' EXIT
 
 python3 - <<'PYEOF'
 import json, os
@@ -249,7 +252,7 @@ if url:  body['url'] = url
 if tags_raw:
     body['tech_tags'] = [t.strip() for t in tags_raw.split(',') if t.strip()][:5]
 
-with open('/tmp/.crow_body.json', 'w') as f:
+with open(os.environ['BODY_FILE'], 'w') as f:
     json.dump(body, f)
 PYEOF
 ```
@@ -264,7 +267,7 @@ SUBMIT_STATUS=$(curl -s -o "$SUBMIT_FILE" -w "%{http_code}" \
   -X POST "$CROW_API/api/projects" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d @/tmp/.crow_body.json)
+  -d @"$BODY_FILE")
 SUBMIT_BODY=$(cat "$SUBMIT_FILE")
 ```
 
@@ -290,6 +293,7 @@ if [ "$SUBMIT_STATUS" = "201" ]; then
   printf "  ║  → %s/p/%-37s║\n" "$CROW_BASE" "$PROJ_ID"
   echo "  ╚════════════════════════════════════════════════════════╝"
   echo ""
+  exit 0
 fi
 ```
 
@@ -324,13 +328,13 @@ if [ "$SUBMIT_STATUS" = "409" ]; then
     ABANDON_STATUS=$(curl -s -o "$ABANDON_FILE" -w "%{http_code}" \
       -X PATCH "$CROW_API/api/projects/$EXISTING_ID/abandon" \
       -H "Authorization: Bearer $TOKEN")
+    ABANDON_BODY=$(cat "$ABANDON_FILE")
     rm -f "$ABANDON_FILE"
 
     if [ "$ABANDON_STATUS" = "200" ]; then
       echo "  ✓ Abandoned. Submitting '$PROJ_NAME'..."
-      # Re-run the submission block above (starting from the python3 body-builder)
     else
-      ABANDON_DETAIL=$(cat "$ABANDON_FILE" | python3 -c "import sys,json; print(json.load(sys.stdin).get('detail','Unknown error'))" 2>/dev/null)
+      ABANDON_DETAIL=$(echo "$ABANDON_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin).get('detail','Unknown error'))" 2>/dev/null)
       echo "  ✗ Failed to abandon: $ABANDON_DETAIL"
       exit 1
     fi
@@ -341,6 +345,8 @@ if [ "$SUBMIT_STATUS" = "409" ]; then
 fi
 ```
 
+After printing `✓ Abandoned`, re-run Step 4's body-builder block and submission block in order.
+
 **Handle 401 — Token expired:**
 
 ```bash
@@ -349,10 +355,10 @@ if [ "$SUBMIT_STATUS" = "401" ]; then
   rm -f "$TOKEN_FILE"
   TOKEN=""
   HANDLE=""
-  # Re-run Step 1 Device Flow block to get a fresh TOKEN and HANDLE
-  # Then re-run Step 4 starting from the body-builder
 fi
 ```
+
+After printing `⟳ Token expired`, re-run Step 1's Device Flow block to get a fresh `TOKEN` and `HANDLE`, then re-run Step 4 starting from the body-builder.
 
 **Handle 503 — Grid is full:**
 
@@ -369,7 +375,9 @@ fi
 **Handle any other error:**
 
 ```bash
-DETAIL=$(echo "$SUBMIT_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin).get('detail','Unknown error'))" 2>/dev/null)
-echo "  ✗ Submission failed (HTTP $SUBMIT_STATUS): $DETAIL"
-exit 1
+if [ "$SUBMIT_STATUS" != "201" ] && [ "$SUBMIT_STATUS" != "409" ] && [ "$SUBMIT_STATUS" != "401" ] && [ "$SUBMIT_STATUS" != "503" ]; then
+  DETAIL=$(echo "$SUBMIT_BODY" | python3 -c "import sys,json; print(json.load(sys.stdin).get('detail','Unknown error'))" 2>/dev/null)
+  echo "  ✗ Submission failed (HTTP $SUBMIT_STATUS): $DETAIL"
+  exit 1
+fi
 ```
