@@ -147,3 +147,82 @@ PROJ_TAGS=""   # optional, ≤5 comma-separated, e.g. "Python,FastAPI,PostgreSQL
 Try sources in the order listed; use the first non-empty value found.
 
 If no project files exist at all and `PROJ_NAME` is still empty, set it to empty string — Step 3 will prompt the user to fill it in.
+
+---
+
+## Step 3 — Confirm
+
+Display the detected fields as a preview table:
+
+```bash
+echo ""
+echo "  ┌──────────────────────────────────────────────────────────┐"
+echo "  │  CROW SUBMIT — Preview                                   │"
+echo "  ├──────────────┬───────────────────────────────────────────┤"
+printf "  │ %-12s │ %-43s│\n" "name"        "${PROJ_NAME:-(none — required)}"
+printf "  │ %-12s │ %-43s│\n" "description" "${PROJ_DESC:-(none)}"
+printf "  │ %-12s │ %-43s│\n" "url"         "${PROJ_URL:-(none)}"
+printf "  │ %-12s │ %-43s│\n" "tech_tags"   "${PROJ_TAGS:-(none)}"
+echo "  └──────────────┴───────────────────────────────────────────┘"
+echo ""
+```
+
+Now enter the edit-and-confirm loop. Ask the user:
+
+```bash
+echo "  Submit? (Y/n)  — or type a field name to edit:"
+echo "  Fields: name / description / url / tech_tags"
+echo ""
+read -r CONFIRM_INPUT
+```
+
+Handle the input:
+
+- **`y`, `Y`, or empty (Enter):**
+  - If `PROJ_NAME` is empty: print `"  ✗ Name is required. Type 'name' to set it."` and ask again.
+  - Otherwise: proceed to Step 4.
+
+- **`n`, `N`, `q`, or `quit`:**
+  - Print `"  Cancelled."` and exit.
+
+- **`name`:**
+  ```bash
+  echo "  New name:"
+  read -r PROJ_NAME
+  ```
+  Redisplay the preview table and ask again.
+
+- **`description`:**
+  ```bash
+  echo "  New description (max 200 chars):"
+  read -r PROJ_DESC
+  PROJ_DESC="${PROJ_DESC:0:200}"
+  ```
+  Redisplay the preview table and ask again.
+
+- **`url`:**
+  ```bash
+  echo "  New URL (https://...):"
+  read -r PROJ_URL
+  ```
+  If `PROJ_URL` does not start with `http://` or `https://`:
+  ```bash
+  echo "  ✗ URL must start with https:// — cleared."
+  PROJ_URL=""
+  ```
+  Redisplay the preview table and ask again.
+
+- **`tech_tags`:**
+  ```bash
+  echo "  New tech tags (comma-separated, max 5 — e.g. Python,FastAPI,Redis):"
+  read -r RAW_TAGS
+  # Keep only the first 5 comma-separated values
+  PROJ_TAGS=$(echo "$RAW_TAGS" | python3 -c "
+import sys
+tags = [t.strip() for t in sys.stdin.read().split(',') if t.strip()]
+print(','.join(tags[:5]))
+")
+  ```
+  Redisplay the preview table and ask again.
+
+- **Any other input:** Print `"  Unknown field. Type name / description / url / tech_tags, or Y/n."` and ask again.
