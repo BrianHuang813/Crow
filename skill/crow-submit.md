@@ -155,6 +155,7 @@ If no project files exist at all and `PROJ_NAME` is still empty, set it to empty
 Display the detected fields as a preview table:
 
 ```bash
+# === STEP 3 LOOP TOP ===
 echo ""
 echo "  ┌──────────────────────────────────────────────────────────┐"
 echo "  │  CROW SUBMIT — Preview                                   │"
@@ -179,7 +180,7 @@ read -r CONFIRM_INPUT
 Handle the input:
 
 - **`y`, `Y`, or empty (Enter):**
-  - If `PROJ_NAME` is empty: print `"  ✗ Name is required. Type 'name' to set it."` and ask again.
+  - If `PROJ_NAME` is empty: print `"  ✗ Name is required. Type 'name' to set it."` and return to **STEP 3 LOOP TOP** — re-run both the preview-table block and the prompt block.
   - Otherwise: proceed to Step 4.
 
 - **`n`, `N`, `q`, or `quit`:**
@@ -190,7 +191,7 @@ Handle the input:
   echo "  New name:"
   read -r PROJ_NAME
   ```
-  Redisplay the preview table and ask again.
+  Return to **STEP 3 LOOP TOP** — re-run both the preview-table block and the prompt block.
 
 - **`description`:**
   ```bash
@@ -198,19 +199,18 @@ Handle the input:
   read -r PROJ_DESC
   PROJ_DESC="${PROJ_DESC:0:200}"
   ```
-  Redisplay the preview table and ask again.
+  Return to **STEP 3 LOOP TOP** — re-run both the preview-table block and the prompt block.
 
 - **`url`:**
   ```bash
   echo "  New URL (https://...):"
   read -r PROJ_URL
+  if [ -n "$PROJ_URL" ] && [[ "$PROJ_URL" != http://* ]] && [[ "$PROJ_URL" != https://* ]]; then
+    echo "  ✗ URL must start with https:// — cleared."
+    PROJ_URL=""
+  fi
   ```
-  If `PROJ_URL` does not start with `http://` or `https://`:
-  ```bash
-  echo "  ✗ URL must start with https:// — cleared."
-  PROJ_URL=""
-  ```
-  Redisplay the preview table and ask again.
+  Return to **STEP 3 LOOP TOP** — re-run both the preview-table block and the prompt block.
 
 - **`tech_tags`:**
   ```bash
@@ -223,6 +223,6 @@ tags = [t.strip() for t in sys.stdin.read().split(',') if t.strip()]
 print(','.join(tags[:5]))
 ")
   ```
-  Redisplay the preview table and ask again.
+  Return to **STEP 3 LOOP TOP** — re-run both the preview-table block and the prompt block.
 
-- **Any other input:** Print `"  Unknown field. Type name / description / url / tech_tags, or Y/n."` and ask again.
+- **Any other input:** Print `"  Unknown field. Type name / description / url / tech_tags, or Y/n."` and return to **STEP 3 LOOP TOP** — re-run both the preview-table block and the prompt block.
