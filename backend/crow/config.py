@@ -1,10 +1,20 @@
 from pydantic_settings import BaseSettings
-from pydantic import ConfigDict
+from pydantic import ConfigDict, field_validator
 
 class Settings(BaseSettings):
     model_config = ConfigDict(env_file=".env")
     database_url: str
     redis_url: str
+
+    @field_validator("database_url")
+    @classmethod
+    def _ensure_asyncpg_driver(cls, v: str) -> str:
+        # Railway's Postgres plugin injects `postgresql://...`; SQLAlchemy async needs `+asyncpg`.
+        if v.startswith("postgresql://"):
+            return "postgresql+asyncpg://" + v[len("postgresql://"):]
+        if v.startswith("postgres://"):
+            return "postgresql+asyncpg://" + v[len("postgres://"):]
+        return v
     frontend_url: str = "http://localhost:5173"
     github_client_id: str = "placeholder"
     github_client_secret: str = "placeholder"

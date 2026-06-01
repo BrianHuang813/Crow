@@ -1,20 +1,20 @@
 import asyncio
-import os
 from alembic import context
 from sqlalchemy.ext.asyncio import create_async_engine
+from crow.config import settings
 from crow.database import Base
 from crow import models  # noqa: F401 — registers all models with Base.metadata
 
 config = context.config
 
 def run_migrations_offline() -> None:
-    url = os.environ["DATABASE_URL"]
+    url = settings.database_url
     context.configure(url=url, target_metadata=Base.metadata, literal_binds=True)
     with context.begin_transaction():
         context.run_migrations()
 
 async def run_migrations_online() -> None:
-    url = os.environ["DATABASE_URL"]
+    url = settings.database_url
     engine = create_async_engine(url)
     async with engine.connect() as conn:
         await conn.run_sync(

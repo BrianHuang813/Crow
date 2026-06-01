@@ -4,3 +4,4 @@ RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/li
 COPY pyproject.toml .
 RUN pip install -e ".[dev]"
 COPY . .
+CMD ["sh", "-c", "uvicorn crow.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
