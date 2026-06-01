@@ -45,6 +45,16 @@ jobs:
         run: pip install -e ".[dev]"
         working-directory: backend
 
+      - name: Check single migration head
+        run: |
+          n=$(alembic heads | grep -c .)
+          if [ "$n" -ne 1 ]; then
+            echo "::error::Multiple migration heads detected — rebase your branch and fix down_revision"
+            alembic heads
+            exit 1
+          fi
+        working-directory: backend
+
       - name: Check migrations apply cleanly
         run: alembic upgrade head
         working-directory: backend
