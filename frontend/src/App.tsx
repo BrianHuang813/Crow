@@ -17,29 +17,6 @@ export default function App() {
   const [hoveredCell, setHoveredCell] = useState<GridCell | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
-  const isCallbackPage = window.location.pathname === '/auth/callback';
-  if (isCallbackPage) return <AuthCallback />;
-
-  // Mobile guard — desktop-only experience
-  if (window.innerWidth <= 820) {
-    return (
-      <div className="mobile-guard" style={{
-        height: '100vh', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        gap: 16, padding: 24, textAlign: 'center',
-      }}>
-        <span style={{ fontSize: 48 }}>🐦</span>
-        <p style={{ fontFamily: 'var(--font-pixel)', fontSize: 22, color: 'var(--accent-2)' }}>
-          CROW.GG
-        </p>
-        <p style={{ color: 'var(--text-muted)', fontSize: 13, maxWidth: 280 }}>
-          Digital Darwinism is a desktop experience.<br />
-          Open on your computer to enter the grid.
-        </p>
-      </div>
-    );
-  }
-
   const cellMap = useMemo(() => {
     const m = new Map<string, GridCell>();
     for (const c of snapshot?.cells ?? []) m.set(`${c.x},${c.y}`, c);
@@ -61,12 +38,33 @@ export default function App() {
           setHoverPos({ x: e.clientX - wrapperRect.left, y: e.clientY - wrapperRect.top });
         }
       }
-      // pixelToCell null → keep current cell (mouse may be over HoverCard button)
     },
     [cellMap]
   );
 
   const handleMouseLeave = useCallback(() => setHoveredCell(null), []);
+
+  const isCallbackPage = window.location.pathname === '/auth/callback';
+  if (isCallbackPage) return <AuthCallback />;
+
+  if (window.innerWidth <= 820) {
+    return (
+      <div className="mobile-guard" style={{
+        height: '100vh', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        gap: 16, padding: 24, textAlign: 'center',
+      }}>
+        <span style={{ fontSize: 48 }}>🐦</span>
+        <p style={{ fontFamily: 'var(--font-pixel)', fontSize: 22, color: 'var(--accent-2)' }}>
+          CROW.GG
+        </p>
+        <p style={{ color: 'var(--text-muted)', fontSize: 13, maxWidth: 280 }}>
+          Digital Darwinism is a desktop experience.<br />
+          Open on your computer to enter the grid.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="app app-desktop">
