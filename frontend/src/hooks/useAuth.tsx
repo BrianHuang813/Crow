@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from 'react';
 import { fetchMe } from '../api/projects';
+import { ApiError } from '../api/client';
 
 interface AuthContextValue {
   token: string | null;
@@ -46,9 +47,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUserId(me.id);
         setCreditsState(me.credits);
       })
-      .catch(() => {
-        // Token expired or invalid — force logout
-        logout();
+      .catch((err) => {
+        // Only force-logout when the backend explicitly rejects the token.
+        // Network errors / aborted fetches (e.g. during navigation right
+        // after login) must not wipe the just-written localStorage.
+        if (err instanceof ApiError && err.status === 401) {
+          logout();
+        }
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
