@@ -1,0 +1,39 @@
+:root {
+  /* Surfaces */
+  --bg: #fcf8f9;
+  --surface: #ffffff;
+  --surface-2: #f0edee;
+  --surface-well: #f6f3f4;
+  --border: #e5e1da;
+
+  /* Text */
+  --text: #1b1b1c;
+  --text-muted: #59413a;
+
+  /* Brand */
+  --accent: #ac3509;        /* deep orange — CTA / brand */
+  --accent-2: #ff7043;      /* coral — hover / highlight */
+  --on-accent: #ffffff;
+
+  /* Secondary / status */
+  --mint: #006a63;          /* alive / growth */
+  --alive: #006a63;
+  --dying: #ff7043;         /* faded orange */
+  --dead: #b8b0ad;          /* fossil light grey */
+  --error: #ba1a1a;
+
+  /* Type */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-pixel: 'VT323', monospace;   /* accent only: grid numbers/labels */
+
+  /* Shape */
+  --radius: 16px;
+  --radius-pill: 9999px;
+
+  /* Elevation */
+  --shadow-card: 0 4px 24px rgba(27, 27, 28, 0.08);
+
+  /* Layout */
+  --container-max: 1280px;
+  --margin-desktop: 40px;
+}
