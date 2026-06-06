@@ -1,3 +1,4 @@
+import { Clock, Grid2x2 } from 'lucide-react';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMyProject } from '../hooks/useMyProject';
@@ -69,8 +70,8 @@ export function ProjectPanel() {
           </div>
 
           <div className="panel-card__meta">
-            <span>⏱ {timeLeft}</span>
-            <span>⬛ {project.territory_size} cells</span>
+            <span><Clock size={13} /> {timeLeft}</span>
+            <span><Grid2x2 size={13} /> {project.territory_size} cells</span>
           </div>
 
           {project.url && (
