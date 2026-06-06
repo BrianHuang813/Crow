@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import HomePage from './pages/HomePage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
+import SubmitPage from './pages/SubmitPage';
 import { AuthCallback } from './components/AuthCallback';
 
 function Placeholder({ title }: { title: string }) {
@@ -15,7 +16,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/explore', element: <Placeholder title="Explore" /> },
-      { path: '/submit', element: <Placeholder title="Submit Project" /> },
+      { path: '/submit', element: <SubmitPage /> },
       { path: '/p/:id', element: <ProjectDetailPage /> },
       { path: '/u/:handle', element: <Placeholder title="Profile" /> },
       { path: '/share/:id', element: <Placeholder title="Share Card" /> },
