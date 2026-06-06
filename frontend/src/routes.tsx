@@ -3,6 +3,7 @@ import { Layout } from './components/Layout';
 import HomePage from './pages/HomePage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import SubmitPage from './pages/SubmitPage';
+import ProfilePage from './pages/ProfilePage';
 import { AuthCallback } from './components/AuthCallback';
 
 function Placeholder({ title }: { title: string }) {
@@ -18,7 +19,7 @@ export const router = createBrowserRouter([
       { path: '/explore', element: <Placeholder title="Explore" /> },
       { path: '/submit', element: <SubmitPage /> },
       { path: '/p/:id', element: <ProjectDetailPage /> },
-      { path: '/u/:handle', element: <Placeholder title="Profile" /> },
+      { path: '/u/:handle', element: <ProfilePage /> },
       { path: '/share/:id', element: <Placeholder title="Share Card" /> },
     ],
   },
