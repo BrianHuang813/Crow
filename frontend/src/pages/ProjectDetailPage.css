@@ -1,0 +1,22 @@
+.detail { max-width: var(--container-max); margin: 0 auto; padding: var(--margin-desktop); }
+.detail__grid { display: grid; grid-template-columns: 1fr 320px; gap: 32px; align-items: start; }
+.detail__title { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 12px; }
+.detail__color-bar { height: 6px; width: 80px; border-radius: var(--radius-pill); margin-bottom: 20px; }
+.detail__story { font-size: 18px; line-height: 1.7; color: var(--text); margin-bottom: 28px; }
+.detail__stats { display: flex; gap: 28px; flex-wrap: wrap; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-card); margin-bottom: 28px; }
+.detail__stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.detail__stat-value { font-family: var(--font-pixel); font-size: 28px; color: var(--text); }
+.detail__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+.detail__chip { background: var(--surface-2); color: var(--text); border-radius: var(--radius-pill); padding: 6px 14px; font-size: 13px; font-weight: 600; }
+.detail__card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-card); padding: 20px; margin-bottom: 20px; }
+.detail__author-name { font-weight: 700; font-size: 16px; }
+.detail__author-role { color: var(--text-muted); font-size: 13px; margin-bottom: 14px; }
+.detail__link { display: flex; align-items: center; gap: 8px; color: var(--accent); text-decoration: none; font-weight: 600; padding: 8px 0; }
+.detail__related-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; text-decoration: none; color: var(--text); }
+.detail__related-row + .detail__related-row { border-top: 1px solid var(--border); }
+.detail__status { display: inline-block; padding: 4px 12px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; }
+.detail__status--alive { background: color-mix(in srgb, var(--alive) 14%, white); color: var(--alive); }
+.detail__status--dying { background: color-mix(in srgb, var(--dying) 16%, white); color: var(--dying); }
+.detail__status--dead { background: var(--surface-2); color: var(--dead); }
+.detail__back { color: var(--text-muted); text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; }
+.detail__muted { color: var(--text-muted); }
