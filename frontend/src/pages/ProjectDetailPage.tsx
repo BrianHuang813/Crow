@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Clock, TrendingUp, Grid2x2, Flag, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Clock, TrendingUp, Grid2x2, Flag, ExternalLink, Share2 } from 'lucide-react';
 import { fetchProject } from '../api/projects';
 import { useAuth } from '../hooks/useAuth';
 import { useGridPoll } from '../hooks/useGridPoll';
@@ -79,6 +79,12 @@ export default function ProjectDetailPage() {
               </a>
             </div>
           )}
+
+          <div className="detail__card">
+            <Link className="detail__link" to={`/share/${project.id}`}>
+              <Share2 size={16} /> Share this project
+            </Link>
+          </div>
 
           {related.length > 0 && (
             <div className="detail__card">

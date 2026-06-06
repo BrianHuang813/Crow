@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import SubmitPage from './pages/SubmitPage';
 import ProfilePage from './pages/ProfilePage';
+import SharePage from './pages/SharePage';
 import { AuthCallback } from './components/AuthCallback';
 
 function Placeholder({ title }: { title: string }) {
@@ -20,7 +21,7 @@ export const router = createBrowserRouter([
       { path: '/submit', element: <SubmitPage /> },
       { path: '/p/:id', element: <ProjectDetailPage /> },
       { path: '/u/:handle', element: <ProfilePage /> },
-      { path: '/share/:id', element: <Placeholder title="Share Card" /> },
+      { path: '/share/:id', element: <SharePage /> },
     ],
   },
 ]);
