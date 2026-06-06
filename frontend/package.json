@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.45.0",
+    "html-to-image": "^1.11.0",
     "lucide-react": "^0.400.0",
     "motion": "^11.3.0",
     "react": "^18.3.1",
