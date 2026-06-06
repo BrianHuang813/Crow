@@ -11,7 +11,7 @@ export default function ProfilePage() {
   const { data: me, isLoading: meLoading } = useMe();
   const { data: project, isLoading: projectLoading } = useMyProject();
 
-  const isOwn = isLoggedIn && !!handle && handle === myHandle;
+  const isOwn = isLoggedIn && !!handle && !!myHandle && handle.toLowerCase() === myHandle.toLowerCase();
 
   if (!isOwn) {
     // No fetch-user-by-handle endpoint exists yet.

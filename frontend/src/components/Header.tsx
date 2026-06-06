@@ -13,7 +13,6 @@ export function Header() {
       </Link>
       <nav className="app-header__nav">
         <NavLink to="/" end className={({ isActive }) => `app-header__link${isActive ? ' is-active' : ''}`}>Grid</NavLink>
-        <NavLink to="/explore" className={({ isActive }) => `app-header__link${isActive ? ' is-active' : ''}`}>Explore</NavLink>
       </nav>
       <div className="app-header__right">
         {isLoggedIn && <span className="app-header__credits">₵ {credits}</span>}

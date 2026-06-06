@@ -13,7 +13,6 @@ describe('Header', () => {
     render(<MemoryRouter><Header /></MemoryRouter>);
     expect(screen.getByText('CROW')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /grid/i })).toHaveAttribute('href', '/');
-    expect(screen.getByRole('link', { name: /explore/i })).toHaveAttribute('href', '/explore');
     expect(screen.getByText(/42/)).toBeInTheDocument();
   });
 });

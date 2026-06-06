@@ -32,11 +32,15 @@ export default function SharePage() {
 
   async function handleDownload() {
     if (!cardRef.current) return;
-    const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = `${project!.name}-crow.png`;
-    a.click();
+    try {
+      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `${project!.name}-crow.png`;
+      a.click();
+    } catch {
+      // Export can fail (e.g. detached node); leave the preview untouched.
+    }
   }
 
   async function handleCopy() {
