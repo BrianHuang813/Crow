@@ -1,0 +1,22 @@
+.sidebar { display: flex; flex-direction: column; gap: 16px; width: 320px; }
+.side-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+}
+.side-panel__title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px;
+}
+.side-panel__title svg { color: var(--accent); }
+.side-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; text-decoration: none; color: var(--text);
+}
+.side-row + .side-row { border-top: 1px solid var(--border); }
+.side-row__swatch { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.side-row__name { font-weight: 600; font-size: 14px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-row__metric { font-family: var(--font-pixel); font-size: 18px; color: var(--mint); }
+.side-empty { color: var(--text-muted); font-size: 13px; }

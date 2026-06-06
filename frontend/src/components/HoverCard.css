@@ -7,13 +7,19 @@
   overflow: hidden;
   pointer-events: none;
   z-index: 20;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-card);
 }
 
 .hover-card--dying {
   border-color: var(--dying);
-  box-shadow: 0 4px 20px rgba(243, 156, 18, 0.2);
+  box-shadow: var(--shadow-card);
 }
+
+.hover-card--dead {
+  border-color: var(--dead);
+}
+
+.hover-card--dead .hover-card__timer { color: var(--dead); }
 
 .hover-card__color-bar {
   height: 3px;
@@ -53,7 +59,7 @@
 
 .hover-card__momentum-fill {
   height: 100%;
-  background: var(--project-color, var(--accent));
+  background: var(--accent);
   transition: width 0.3s ease;
 }
 
@@ -83,6 +89,10 @@
   font-size: 12px;
   padding: 5px 8px;
   pointer-events: all;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .hover-card__cost {

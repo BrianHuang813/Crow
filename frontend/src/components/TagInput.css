@@ -1,0 +1,22 @@
+.tag-input {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  background: var(--surface-well);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+.tag-input:focus-within { border-color: var(--accent); }
+.tag-input__chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface-2); color: var(--text);
+  border-radius: var(--radius-pill); padding: 4px 10px; font-size: 13px; font-weight: 600;
+}
+.tag-input__remove {
+  display: inline-flex; border: none; background: none; cursor: pointer;
+  color: var(--text-muted); padding: 0;
+}
+.tag-input__remove:hover { color: var(--accent); }
+.tag-input__field {
+  flex: 1; min-width: 120px; border: none; outline: none; background: transparent;
+  font-size: 14px; color: var(--text);
+}

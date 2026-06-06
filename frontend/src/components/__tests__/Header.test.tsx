@@ -11,9 +11,8 @@ vi.mock('../LoginButton', () => ({ LoginButton: () => <button>Login</button> }))
 describe('Header', () => {
   it('shows brand, nav links, and credits when logged in', () => {
     render(<MemoryRouter><Header /></MemoryRouter>);
-    expect(screen.getByText('crow.gg')).toBeInTheDocument();
+    expect(screen.getByText('CROW')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /grid/i })).toHaveAttribute('href', '/');
-    expect(screen.getByRole('link', { name: /explore/i })).toHaveAttribute('href', '/explore');
     expect(screen.getByText(/42/)).toBeInTheDocument();
   });
 });

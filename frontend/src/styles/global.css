@@ -46,14 +46,10 @@ html, body, #root {
 }
 
 .main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 16px;
-  position: relative;
-  z-index: 2;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--margin-desktop);
+  width: 100%;
 }
 
 .btn {
@@ -111,17 +107,22 @@ html, body, #root {
 .grid-outer {
   position: relative;
   display: inline-block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 12px;
 }
 
 /* Loading / error states */
 .grid-status {
   font-family: var(--font-pixel);
   font-size: 24px;
-  color: var(--accent-2);
+  color: var(--text-muted);
   letter-spacing: 2px;
 }
 .grid-status--error {
-  color: var(--dying);
+  color: var(--error);
   animation: crow-blink 1s steps(1) infinite;
 }
 
@@ -136,13 +137,13 @@ html, body, #root {
 
 /* Flex row layout */
 .main--row {
-  flex-direction: row !important;
-  align-items: flex-start;
+  display: flex;
   gap: 24px;
-  justify-content: center;
+  align-items: flex-start;
 }
 
 .grid-section {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;

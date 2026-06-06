@@ -25,17 +25,17 @@ export function pixelToCell(
 }
 
 export function getCellColor(cell: GridCell): string {
-  if (cell.state === 'empty') return '#2a2a2a';
-  if (cell.state === 'fossil') return '#3a3a3a';
+  if (cell.state === 'empty') return '#f1ece9';
+  if (cell.state === 'fossil') return '#d4ccc7';
   return cell.color ?? '#888888';
 }
 
 function drawGrid(ctx: CanvasRenderingContext2D, cells: GridCell[]): void {
-  ctx.fillStyle = '#1a1a1a';
+  ctx.fillStyle = '#e7dfdb'; // gap lines read as a soft warm grid
   ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
   for (const cell of cells) {
     const { px, py } = cellToPixel(cell.x, cell.y);
-    ctx.globalAlpha = cell.state === 'dying' ? 0.65 : 1;
+    ctx.globalAlpha = cell.state === 'dying' ? 0.5 : 1;
     ctx.fillStyle = getCellColor(cell);
     ctx.fillRect(px, py, CELL_SIZE, CELL_SIZE);
   }

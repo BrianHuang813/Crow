@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { API_BASE } from '../api/client';
 
@@ -7,7 +8,9 @@ export function LoginButton() {
   if (isLoggedIn) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>@{handle}</span>
+        <Link to={`/u/${handle}`} style={{ color: 'var(--text-muted)', fontSize: 13, textDecoration: 'none' }}>
+          @{handle}
+        </Link>
         <button className="btn btn--ghost" onClick={logout}>
           Logout
         </button>
