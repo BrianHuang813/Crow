@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from './components/Layout';
-import App from './App';
+import HomePage from './pages/HomePage';
 import { AuthCallback } from './components/AuthCallback';
 
 function Placeholder({ title }: { title: string }) {
@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { path: '/', element: <App /> },
+      { path: '/', element: <HomePage /> },
       { path: '/explore', element: <Placeholder title="Explore" /> },
       { path: '/submit', element: <Placeholder title="Submit Project" /> },
       { path: '/p/:id', element: <Placeholder title="Project" /> },
