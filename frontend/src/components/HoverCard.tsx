@@ -1,3 +1,4 @@
+import { Zap, Rocket, Sparkles, Hourglass, Grid2x2 } from 'lucide-react';
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { animate } from 'motion/mini';
@@ -108,7 +109,7 @@ export function HoverCard({ cell, canvasX, canvasY }: Props) {
 
         <p className="hover-card__meta">
           <span>{project.momentum} / 100</span>
-          <span>⬛ {project.territory_size}</span>
+          <span><Grid2x2 size={12} /> {project.territory_size}</span>
         </p>
 
         {project.tech_tags.length > 0 && (
@@ -125,7 +126,7 @@ export function HoverCard({ cell, canvasX, canvasY }: Props) {
               disabled={inCooldown || clickMutation.isPending}
               title={inCooldown ? 'Cooldown: wait 60s' : '+5 Momentum, +5 Credits'}
             >
-              {inCooldown ? '⏳ Click' : '⚡ Click'}
+              {inCooldown ? <><Hourglass size={13} /> Click</> : <><Zap size={13} /> Click</>}
             </button>
             <button
               className="btn btn--primary hover-card__btn"
@@ -133,7 +134,7 @@ export function HoverCard({ cell, canvasX, canvasY }: Props) {
               disabled={!canBoost || boostMutation.isPending}
               title="Boost: 20 Credits → +25 Momentum, +30min"
             >
-              🚀 Boost <span className="hover-card__cost">20₵</span>
+              <Rocket size={13} /> Boost <span className="hover-card__cost">20₵</span>
             </button>
           </div>
         )}
@@ -145,7 +146,7 @@ export function HoverCard({ cell, canvasX, canvasY }: Props) {
             disabled={resurrectMutation.isPending}
             title="Resurrect: 200 Credits → 24h timer, restore fossil cells"
           >
-            ✨ Resurrect <span className="hover-card__cost">200₵</span>
+            <Sparkles size={13} /> Resurrect <span className="hover-card__cost">200₵</span>
           </button>
         )}
 
