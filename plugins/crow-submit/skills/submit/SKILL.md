@@ -12,7 +12,7 @@ Follow these steps **in exact order**. Do not skip steps.
 Run this first to set constants used throughout:
 
 ```bash
-CROW_API="${CROW_API_URL:-https://api.crow.gg}"
+CROW_API="${CROW_API_URL:-https://api-production-1f00d.up.railway.app}"
 TOKEN_FILE="$HOME/.crow/token"
 ```
 
@@ -38,6 +38,15 @@ If `TOKEN` is empty (no token file), run the Device Flow:
 # Request a device code
 DC_JSON=$(curl -s -X POST "$CROW_API/api/auth/device/code" \
   -H "Content-Type: application/json")
+
+# Guard: the GitHub OAuth App must have Device Flow enabled, and the API must be reachable.
+if ! echo "$DC_JSON" | python3 -c "import sys,json; sys.exit(0 if 'device_code' in json.load(sys.stdin) else 1)" 2>/dev/null; then
+  ERR=$(echo "$DC_JSON" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('error_description') or d.get('error') or d)" 2>/dev/null || echo "no response from $CROW_API")
+  echo "  ✗ Could not start GitHub Device Flow: $ERR"
+  echo "    If this says 'device_flow_disabled', enable Device Flow on the Crow GitHub OAuth App"
+  echo "    (GitHub → Settings → Developer settings → OAuth Apps → Crow → Enable Device Flow)."
+  exit 1
+fi
 
 DEVICE_CODE=$(echo "$DC_JSON" | python3 -c "import sys,json; print(json.load(sys.stdin)['device_code'])")
 USER_CODE=$(echo "$DC_JSON"   | python3 -c "import sys,json; print(json.load(sys.stdin)['user_code'])")
