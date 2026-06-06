@@ -1,0 +1,24 @@
+.share-card {
+  width: 360px; height: 640px;
+  border-radius: 20px; padding: 32px;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.share-card--cream { background: var(--bg); color: var(--text); }
+.share-card--white { background: #ffffff; color: var(--text); }
+.share-card--dark { background: #1b1b1c; color: #f3f0f1; border-color: #303031; }
+.share-card__badge {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent); color: var(--on-accent);
+  border-radius: var(--radius-pill); padding: 6px 12px; font-size: 12px; font-weight: 700;
+}
+.share-card__brand { position: absolute; top: 32px; right: 32px; font-family: var(--font-pixel); font-size: 22px; opacity: 0.6; }
+.share-card__center { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+.share-card__swatch { width: 72px; height: 72px; border-radius: 18px; }
+.share-card__name { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.share-card__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.share-card__chip { border: 1px solid currentColor; opacity: 0.8; border-radius: var(--radius-pill); padding: 4px 12px; font-size: 13px; font-weight: 600; }
+.share-card__stats { display: flex; gap: 32px; border-top: 1px solid currentColor; padding-top: 18px; }
+.share-card__stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; }
+.share-card__stat-value { font-family: var(--font-pixel); font-size: 26px; }
