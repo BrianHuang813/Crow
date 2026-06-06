@@ -12,7 +12,7 @@ export function CrowLogo() {
         />
       </div>
       <div className="crow-logo__text">
-        <span className="crow-logo__name">crow.gg</span>
+        <span className="crow-logo__name">CROW</span>
         <span className="crow-logo__tagline">Digital Darwinism</span>
       </div>
     </a>

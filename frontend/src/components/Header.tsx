@@ -9,7 +9,7 @@ export function Header() {
     <header className="app-header">
       <Link to="/" className="app-header__brand">
         <img src="/logo.png" alt="" />
-        <span className="app-header__name">crow.gg</span>
+        <span className="app-header__name">CROW</span>
       </Link>
       <nav className="app-header__nav">
         <NavLink to="/" end className={({ isActive }) => `app-header__link${isActive ? ' is-active' : ''}`}>Grid</NavLink>

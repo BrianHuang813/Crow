@@ -10,9 +10,9 @@ describe('CrowLogo', () => {
     expect(img).toHaveAttribute('src', '/logo.png');
   });
 
-  it('renders the crow.gg name', () => {
+  it('renders the CROW name', () => {
     render(<CrowLogo />);
-    expect(screen.getByText('crow.gg')).toBeInTheDocument();
+    expect(screen.getByText('CROW')).toBeInTheDocument();
   });
 });
 

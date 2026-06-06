@@ -65,7 +65,7 @@ export default function HomePage() {
         gap: 16, padding: 24, textAlign: 'center',
       }}>
         <p style={{ fontFamily: 'var(--font-pixel)', fontSize: 22, color: 'var(--accent)' }}>
-          CROW.GG
+          CROW
         </p>
         <p style={{ color: 'var(--text-muted)', fontSize: 13, maxWidth: 280 }}>
           Digital Darwinism is a desktop experience.<br />
