@@ -1,0 +1,26 @@
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 12px 40px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.app-header__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.app-header__brand img { width: 32px; height: 32px; image-rendering: pixelated; }
+.app-header__name { font-weight: 700; color: var(--accent); font-size: 18px; }
+.app-header__nav { display: flex; gap: 24px; }
+.app-header__link {
+  color: var(--text); text-decoration: none; font-weight: 600; font-size: 15px;
+  padding-bottom: 2px; border-bottom: 2px solid transparent;
+}
+.app-header__link.is-active { color: var(--accent); border-bottom-color: var(--accent); }
+.app-header__right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.app-header__credits { font-family: var(--font-pixel); font-size: 20px; color: var(--mint); }
+.app-header__cta {
+  background: var(--accent); color: var(--on-accent); text-decoration: none;
+  font-weight: 600; padding: 9px 16px; border-radius: var(--radius);
+}

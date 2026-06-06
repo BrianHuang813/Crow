@@ -1,21 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;700&display=swap');
-
-:root {
-  --bg: #1a1a1a;
-  --surface: #252525;
-  --surface-2: #333333;
-  --border: #3a3a3a;
-  --text: #f0eded;
-  --text-muted: #8d7169;
-  --accent: #ac3509;
-  --accent-2: #006a63;
-  --alive: #2ecc71;
-  --dying: #f39c12;
-  --dead: #7f8c8d;
-  --font-pixel: 'VT323', monospace;
-  --font-mono: 'JetBrains Mono', monospace;
-  --radius: 4px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=VT323&display=swap');
+@import './tokens.css';
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,8 +7,9 @@ html, body, #root {
   height: 100%;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 14px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
 }
 
 .app {

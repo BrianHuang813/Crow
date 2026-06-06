@@ -1,0 +1,17 @@
+.crow-mascot {
+  position: fixed;
+  bottom: 12px;
+  left: 24px;
+  width: 56px;
+  height: 56px;
+  z-index: 40;
+  pointer-events: auto;
+  image-rendering: pixelated;
+}
+.crow-mascot img {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  user-select: none;
+  -webkit-user-drag: none;
+}
