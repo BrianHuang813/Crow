@@ -9,7 +9,7 @@ interface Props {
 
 export function ProjectActions({ project }: Props) {
   const {
-    inCooldown, canBoost, canResurrect, showInteract, credits,
+    isLoggedIn, isOwnProject, inCooldown, canBoost, canResurrect, showInteract, credits,
     clickMutation, boostMutation, resurrectMutation,
   } = useProjectInteractions(project);
 
@@ -47,7 +47,7 @@ export function ProjectActions({ project }: Props) {
         </button>
       )}
 
-      {project.status === 'dead' && !canResurrect && (
+      {project.status === 'dead' && !canResurrect && isLoggedIn && !isOwnProject && (
         <p className="project-actions__hint">Need 200₵ to resurrect (you have {credits}).</p>
       )}
     </div>

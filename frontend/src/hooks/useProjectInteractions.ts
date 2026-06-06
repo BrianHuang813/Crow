@@ -59,6 +59,7 @@ export function useProjectInteractions(project: Project | undefined) {
     isLoggedIn && !isOwnProject && !!project && project.status !== 'dead';
 
   return {
+    isLoggedIn,
     isOwnProject,
     inCooldown,
     canBoost,
