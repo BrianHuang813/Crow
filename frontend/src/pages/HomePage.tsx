@@ -1,12 +1,12 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { GridCanvas, pixelToCell } from '../components/GridCanvas';
 import { HoverCard } from '../components/HoverCard';
 import { ProjectPanel } from '../components/ProjectPanel';
 import { Sidebar } from '../components/Sidebar';
 import { useGridPoll } from '../hooks/useGridPoll';
 import { useAuth } from '../hooks/useAuth';
-import { useTopProjects } from '../hooks/useTopProjects';
-import { diffSnapshots, type ActivityEvent } from '../lib/activityFeed';
+import { useProjects } from '../hooks/useProjects';
+import { useActivity } from '../hooks/useActivity';
 import type { GridCell } from '../types/api';
 
 export default function HomePage() {
@@ -16,19 +16,9 @@ export default function HomePage() {
   const [hoveredCell, setHoveredCell] = useState<GridCell | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
-  const top = useTopProjects(snapshot);
-
-  // Accumulate a short live-activity log by diffing successive snapshots.
-  const prevCells = useRef<GridCell[] | null>(null);
-  const [activity, setActivity] = useState<ActivityEvent[]>([]);
-  useEffect(() => {
-    if (!snapshot) return;
-    if (prevCells.current) {
-      const events = diffSnapshots(prevCells.current, snapshot.cells, Date.now());
-      if (events.length) setActivity(a => [...events, ...a].slice(0, 20));
-    }
-    prevCells.current = snapshot.cells;
-  }, [snapshot]);
+  const { data: trending } = useProjects({ sort: 'momentum', status: 'active', limit: 5 });
+  const { data: builders } = useProjects({ sort: 'territory', status: 'active', limit: 5 });
+  const { data: activity } = useActivity(12);
 
   const cellMap = useMemo(() => {
     const m = new Map<string, GridCell>();
@@ -89,7 +79,11 @@ export default function HomePage() {
           </div>
         )}
       </div>
-      <Sidebar top={top} activity={activity} />
+      <Sidebar
+        trending={trending?.items ?? []}
+        builders={builders?.items ?? []}
+        activity={activity?.events ?? []}
+      />
       {isLoggedIn && <ProjectPanel />}
     </main>
   );

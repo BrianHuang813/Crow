@@ -4,7 +4,8 @@ import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../../hooks/useAuth', () => ({ useAuth: () => ({ isLoggedIn: false, credits: 0 }) }));
 vi.mock('../../hooks/useGridPoll', () => ({ useGridPoll: () => ({ data: undefined, isLoading: true, isError: false }) }));
-vi.mock('../../hooks/useTopProjects', () => ({ useTopProjects: () => [] }));
+vi.mock('../../hooks/useProjects', () => ({ useProjects: () => ({ data: { items: [] } }) }));
+vi.mock('../../hooks/useActivity', () => ({ useActivity: () => ({ data: { events: [] } }) }));
 
 import HomePage from '../HomePage';
 
