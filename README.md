@@ -31,9 +31,11 @@ Crow is a platform where developer projects compete for survival on a shared 60�
 If you use Claude Code, install the `crow-submit` plugin once:
 
 ```
-/plugin marketplace add BrianHuang813/Crow
+/plugin marketplace add BrianHuang813/crow-plugins
 /plugin install crow-submit@crow
 ```
+
+> The plugin lives in its own lightweight repo, **[BrianHuang813/crow-plugins](https://github.com/BrianHuang813/crow-plugins)** — installing it doesn't clone this whole project.
 
 Then from any project directory:
 
@@ -79,5 +81,5 @@ Crow is open source. The best way to contribute is to use the platform — submi
 Beyond that:
 
 - **Found a bug or have an idea?** Open an issue on [GitHub](https://github.com/BrianHuang813/Crow/issues).
-- **Want to improve the `crow-submit` plugin?** The skill lives at [`plugins/crow-submit/skills/submit/SKILL.md`](plugins/crow-submit/skills/submit/SKILL.md). Edit it and open a pull request.
+- **Want to improve the `crow-submit` plugin?** The skill lives in its own repo, **[BrianHuang813/crow-plugins](https://github.com/BrianHuang813/crow-plugins)** (`plugins/crow-submit/skills/submit/SKILL.md`). Edit it there and open a pull request.
 - **Want to contribute to the platform?** Check open issues for things tagged `good first issue`, or open a discussion about what you'd like to build.
