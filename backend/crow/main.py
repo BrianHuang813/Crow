@@ -11,6 +11,7 @@ from .routers import (
     interact as interact_router,
     og as og_router,
     users as users_router,
+    activity as activity_router,
 )
 
 @asynccontextmanager
@@ -33,5 +34,6 @@ app.include_router(grid.router, prefix="/api")
 app.include_router(auth_router.router, prefix="/api")
 app.include_router(projects_router.router, prefix="/api")
 app.include_router(users_router.router, prefix="/api")
+app.include_router(activity_router.router, prefix="/api")
 app.include_router(interact_router.router, prefix="/api")
 app.include_router(og_router.router, prefix="/api")
