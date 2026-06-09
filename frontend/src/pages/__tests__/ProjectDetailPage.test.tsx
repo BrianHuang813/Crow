@@ -15,8 +15,7 @@ vi.mock('@tanstack/react-query', async (orig) => {
   return { ...actual, useQuery: () => ({ data: sample, isLoading: false, isError: false }) };
 });
 vi.mock('../../hooks/useAuth', () => ({ useAuth: () => ({ isLoggedIn: true, userId: 'me', credits: 0, adjustCredits: vi.fn() }) }));
-vi.mock('../../hooks/useGridPoll', () => ({ useGridPoll: () => ({ data: undefined }) }));
-vi.mock('../../hooks/useTopProjects', () => ({ useTopProjects: () => [] }));
+vi.mock('../../hooks/useRelated', () => ({ useRelated: () => ({ data: { items: [] } }) }));
 vi.mock('../../components/ProjectActions', () => ({ ProjectActions: () => <div data-testid="actions" /> }));
 
 import ProjectDetailPage from '../ProjectDetailPage';
