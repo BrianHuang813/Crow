@@ -74,7 +74,7 @@ def generate_og_card(project: Project) -> bytes:
     draw.text((132, 498), project.status.upper(), fill=status_color, font=font_small)
 
     # Crow branding
-    draw.text((100, HEIGHT - 100), "crow.gg", fill=MUTED_COLOR, font=font_medium)
+    draw.text((100, HEIGHT - 100), "CROW", fill=MUTED_COLOR, font=font_medium)
     draw.text((WIDTH - 300, HEIGHT - 100), "Digital Darwinism", fill=MUTED_COLOR, font=font_small)
 
     buf = BytesIO()
