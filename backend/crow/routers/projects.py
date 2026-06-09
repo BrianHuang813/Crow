@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 import redis.asyncio as redis
@@ -8,12 +8,15 @@ from ..database import get_db
 from ..redis_client import get_redis
 from ..auth import get_current_user
 from ..models import User, Project, GridCell
-from ..schemas.project import ProjectCreate, ProjectOut
+from ..schemas.project import ProjectCreate, ProjectOut, ProjectListOut, RelatedOut
 from ..palette import pick_color
 from ..config import settings
 from ..services.grid_service import invalidate_cache
 
 router = APIRouter()
+
+_VALID_STATUS = {"active", "alive", "dying", "dead", "all"}
+_VALID_SORT = {"momentum", "recent", "territory"}
 
 
 async def _get_random_empty_cell(db: AsyncSession) -> GridCell | None:
@@ -68,6 +71,58 @@ async def create_project(
     await db.refresh(project)
     await invalidate_cache(r)
     return project
+
+
+@router.get("/projects", response_model=ProjectListOut)
+async def list_projects(
+    db: AsyncSession = Depends(get_db),
+    status: str = Query("active"),
+    sort: str = Query("momentum"),
+    owner_handle: str | None = Query(None),
+    tag: str | None = Query(None),
+    limit: int = Query(20),
+    offset: int = Query(0),
+):
+    if status not in _VALID_STATUS:
+        raise HTTPException(status_code=400, detail="invalid status")
+    if sort not in _VALID_SORT:
+        raise HTTPException(status_code=400, detail="invalid sort")
+    if limit < 0 or offset < 0:
+        raise HTTPException(status_code=400, detail="limit/offset must be >= 0")
+    limit = min(limit, 50)
+
+    base = select(Project)
+    if status == "active":
+        base = base.where(Project.status.in_(["alive", "dying"]))
+    elif status != "all":
+        base = base.where(Project.status == status)
+
+    if owner_handle is not None:
+        owner = (
+            await db.execute(select(User).where(User.handle == owner_handle))
+        ).scalar_one_or_none()
+        if not owner:
+            raise HTTPException(status_code=404, detail="User not found")
+        base = base.where(Project.owner_id == owner.id)
+
+    if tag is not None:
+        base = base.where(Project.tech_tags.any(tag))
+
+    total = await db.scalar(select(func.count()).select_from(base.subquery()))
+
+    if sort == "momentum":
+        ordering = (Project.momentum.desc(), Project.created_at.desc())
+    elif sort == "territory":
+        ordering = (Project.territory_size.desc(), Project.created_at.desc())
+    elif status == "dead":
+        ordering = (Project.died_at.desc(),)
+    else:
+        ordering = (Project.created_at.desc(),)
+
+    rows = (
+        await db.execute(base.order_by(*ordering).limit(limit).offset(offset))
+    ).scalars().all()
+    return ProjectListOut(items=rows, total=total or 0, limit=limit, offset=offset)
 
 
 @router.get("/projects/mine", response_model=ProjectOut | None)

@@ -26,3 +26,14 @@ class ProjectOut(BaseModel):
     died_at: datetime | None
 
     model_config = {"from_attributes": True}
+
+
+class ProjectListOut(BaseModel):
+    items: list[ProjectOut]
+    total: int
+    limit: int
+    offset: int
+
+
+class RelatedOut(BaseModel):
+    items: list[ProjectOut]
