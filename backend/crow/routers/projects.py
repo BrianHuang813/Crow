@@ -145,6 +145,61 @@ async def get_project(project_id: str, db: AsyncSession = Depends(get_db)):
     return project
 
 
+@router.get("/projects/{project_id}/related", response_model=RelatedOut)
+async def related_projects(
+    project_id: str,
+    db: AsyncSession = Depends(get_db),
+    limit: int = Query(4),
+):
+    limit = min(max(limit, 1), 12)
+    target = (
+        await db.execute(select(Project).where(Project.id == project_id))
+    ).scalar_one_or_none()
+    if not target:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    active = (Project.status.in_(["alive", "dying"]), Project.id != target.id)
+    chosen: list[Project] = []
+    seen: set = set()
+    had_tag_matches = False
+
+    if target.tech_tags:
+        candidates = (
+            await db.execute(
+                select(Project).where(*active, Project.tech_tags.overlap(target.tech_tags))
+            )
+        ).scalars().all()
+        had_tag_matches = len(candidates) > 0
+        target_tags = set(target.tech_tags)
+        candidates.sort(
+            key=lambda p: (len(set(p.tech_tags) & target_tags), p.momentum),
+            reverse=True,
+        )
+        for p in candidates:
+            chosen.append(p)
+            seen.add(p.id)
+            if len(chosen) >= limit:
+                break
+
+    if len(chosen) < limit and not had_tag_matches:
+        fill = (
+            await db.execute(
+                select(Project).where(*active)
+                .order_by(Project.momentum.desc(), Project.created_at.desc())
+                .limit(limit * 3)
+            )
+        ).scalars().all()
+        for p in fill:
+            if p.id in seen:
+                continue
+            chosen.append(p)
+            seen.add(p.id)
+            if len(chosen) >= limit:
+                break
+
+    return RelatedOut(items=chosen[:limit])
+
+
 @router.patch("/projects/{project_id}/abandon", response_model=ProjectOut)
 async def abandon_project(
     project_id: str,
