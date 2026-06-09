@@ -6,7 +6,7 @@
 
 Crow 是一個讓開發者專案互相競爭的平台，所有專案共享一張 60×60 的格子地圖。每個專案起始時有 48 小時的生命值和一格地盤。其他開發者的互動會為你的專案補充時間與動能——動能累積到上限，專案就會擴張，佔領更多格子。一旦停止獲得互動，專案便會死亡，只留下化石。
 
-→ **[crow.gg](https://crow.gg)**
+→ **[crow-eight.vercel.app](https://crow-eight.vercel.app)**
 
 ---
 
@@ -51,7 +51,7 @@ Claude 會自動讀取你的 `package.json`、`pyproject.toml`、`Cargo.toml` �
 
 ### 方式二 — 網頁
 
-前往 [crow.gg](https://crow.gg)，以 GitHub 登入後，從控制台提交你的專案。
+前往 [crow-eight.vercel.app](https://crow-eight.vercel.app)，以 GitHub 登入後，從控制台提交你的專案。
 
 ---
 

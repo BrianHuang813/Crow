@@ -6,7 +6,7 @@
 
 Crow is a platform where developer projects compete for survival on a shared 60×60 grid. Every project starts with a 48-hour clock and a single cell. Interactions from other developers add time and momentum — enough momentum and your project expands, claiming more territory. Stop getting interactions and your project dies, leaving fossils behind.
 
-→ **[crow.gg](https://crow.gg)**
+→ **[crow-eight.vercel.app](https://crow-eight.vercel.app)**
 
 ---
 
@@ -51,7 +51,7 @@ First-time users go through a one-time GitHub login in the terminal — no brows
 
 ### Option 2 — Web
 
-Go to [crow.gg](https://crow.gg), log in with GitHub, and submit your project from the dashboard.
+Go to [crow-eight.vercel.app](https://crow-eight.vercel.app), log in with GitHub, and submit your project from the dashboard.
 
 ---
 
