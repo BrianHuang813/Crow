@@ -1,72 +1,79 @@
 import { useParams, Link } from 'react-router-dom';
 import { Coins, Sparkles, Grid2x2 } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
-import { useMe } from '../hooks/useMe';
-import { useMyProject } from '../hooks/useMyProject';
+import { useUserProfile } from '../hooks/useUserProfile';
+import { useProjects } from '../hooks/useProjects';
 import './ProfilePage.css';
 
 export default function ProfilePage() {
   const { handle } = useParams<{ handle: string }>();
-  const { isLoggedIn, handle: myHandle } = useAuth();
-  const { data: me, isLoading: meLoading } = useMe();
-  const { data: project, isLoading: projectLoading } = useMyProject();
+  const { data: profile, isLoading, isError } = useUserProfile(handle);
+  const { data: projectsData } = useProjects({ owner_handle: handle, status: 'all', sort: 'recent' });
 
-  const isOwn = isLoggedIn && !!handle && !!myHandle && handle.toLowerCase() === myHandle.toLowerCase();
-
-  if (!isOwn) {
-    // No fetch-user-by-handle endpoint exists yet.
-    // TODO: real user-by-handle endpoint for viewing other builders.
+  if (isLoading) return <main className="profile"><p className="profile__empty">Loading…</p></main>;
+  if (isError || !profile) {
     return (
       <main className="profile">
         <div className="profile__degraded">
           <h1>@{handle}</h1>
-          <p>This builder's profile isn't public yet.</p>
+          <p>Builder not found.</p>
         </div>
       </main>
     );
   }
 
-  if (meLoading || projectLoading) return <main className="profile"><p className="profile__empty">Loading…</p></main>;
-
-  const initial = (me?.handle ?? handle ?? '?').charAt(0).toUpperCase();
+  const projects = projectsData?.items ?? [];
+  const living = projects.filter(p => p.status !== 'dead');
+  const fossils = projects.filter(p => p.status === 'dead');
+  const initial = profile.handle.charAt(0).toUpperCase();
 
   return (
     <main className="profile">
       <header className="profile__header">
-        {me?.avatar_url
-          ? <img className="profile__avatar" src={me.avatar_url} alt="" />
+        {profile.avatar_url
+          ? <img className="profile__avatar" src={profile.avatar_url} alt="" />
           : <div className="profile__avatar">{initial}</div>}
         <div>
-          <h1 className="profile__handle">@{me?.handle ?? handle}</h1>
+          <h1 className="profile__handle">@{profile.handle}</h1>
           <p className="profile__sub">Digital Darwinism builder</p>
         </div>
       </header>
 
       <div className="profile__stats">
         <div className="profile__stat">
-          <div className="profile__stat-label"><Coins size={13} /> Credits</div>
-          <div className="profile__stat-value">{me?.credits ?? 0}</div>
+          <div className="profile__stat-label"><Coins size={13} /> Projects</div>
+          <div className="profile__stat-value">{profile.project_count}</div>
         </div>
         <div className="profile__stat">
           <div className="profile__stat-label"><Sparkles size={13} /> Resurrections</div>
-          <div className="profile__stat-value">{me?.resurrection_count ?? 0}</div>
+          <div className="profile__stat-value">{profile.resurrection_count}</div>
         </div>
         <div className="profile__stat">
           <div className="profile__stat-label"><Grid2x2 size={13} /> Territory</div>
-          <div className="profile__stat-value">{project?.territory_size ?? 0}</div>
+          <div className="profile__stat-value">{profile.territory_total}</div>
         </div>
       </div>
 
-      <h2 className="profile__section-title">Project</h2>
-      {/* TODO: fossil graveyard of past dead projects needs a backend endpoint */}
-      {project ? (
-        <Link to={`/p/${project.id}`} className="profile__project">
-          <span className="profile__project-swatch" style={{ background: project.color }} />
-          <span className="profile__project-name">{project.name}</span>
-          <span className={`profile__status profile__status--${project.status}`}>{project.status}</span>
+      <h2 className="profile__section-title">Projects</h2>
+      {living.length === 0 && <p className="profile__empty">No active projects.</p>}
+      {living.map(p => (
+        <Link key={p.id} to={`/p/${p.id}`} className="profile__project">
+          <span className="profile__project-swatch" style={{ background: p.color }} />
+          <span className="profile__project-name">{p.name}</span>
+          <span className={`profile__status profile__status--${p.status}`}>{p.status}</span>
         </Link>
-      ) : (
-        <p className="profile__empty">No territory claimed yet. <Link to="/submit">Claim a cell →</Link></p>
+      ))}
+
+      {fossils.length > 0 && (
+        <>
+          <h2 className="profile__section-title" style={{ marginTop: 28 }}>Fossil graveyard</h2>
+          {fossils.map(p => (
+            <Link key={p.id} to={`/p/${p.id}`} className="profile__project">
+              <span className="profile__project-swatch" style={{ background: p.color }} />
+              <span className="profile__project-name">{p.name}</span>
+              <span className="profile__status profile__status--dead">dead</span>
+            </Link>
+          ))}
+        </>
       )}
     </main>
   );
