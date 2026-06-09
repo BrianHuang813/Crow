@@ -1,0 +1,11 @@
+# OS
+.DS_Store
+
+# Editor / build artifacts
+*.tsbuildinfo
+
+# Captured network logs (may contain auth tokens — never commit)
+*.har
+
+# Local design references / scratch
+stitch_remix_of_ai_creator_feed/
