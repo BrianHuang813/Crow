@@ -87,7 +87,6 @@ export default function ProjectDetailPage() {
           {related.length > 0 && (
             <div className="detail__card">
               <div className="detail__author-role" style={{ marginBottom: 8 }}>More on the grid</div>
-              {/* TODO: real similarity-based recommendations endpoint */}
               {related.map(p => (
                 <Link key={p.id} to={`/p/${p.id}`} className="detail__related-row">
                   <span style={{ width: 10, height: 10, borderRadius: 3, background: p.color, flex: 'none' }} />
