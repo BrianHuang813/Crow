@@ -63,3 +63,49 @@ async def get_user_profile(
         following_count=following_count or 0,
         is_following=is_following,
     )
+
+
+@router.post("/users/{handle}/follow", response_model=FollowStateOut)
+async def follow_user(
+    handle: str,
+    db: AsyncSession = Depends(get_db),
+    me: User = Depends(get_current_user),
+):
+    target = (
+        await db.execute(select(User).where(User.handle == handle))
+    ).scalar_one_or_none()
+    if not target:
+        raise HTTPException(status_code=404, detail="User not found")
+    if target.id == me.id:
+        raise HTTPException(status_code=400, detail="Cannot follow yourself")
+
+    existing = await db.scalar(
+        select(Follow).where(Follow.follower_id == me.id, Follow.followee_id == target.id)
+    )
+    if not existing:
+        db.add(Follow(follower_id=me.id, followee_id=target.id))
+        await db.commit()
+
+    return FollowStateOut(is_following=True, follower_count=await _follower_count(db, target.id))
+
+
+@router.delete("/users/{handle}/follow", response_model=FollowStateOut)
+async def unfollow_user(
+    handle: str,
+    db: AsyncSession = Depends(get_db),
+    me: User = Depends(get_current_user),
+):
+    target = (
+        await db.execute(select(User).where(User.handle == handle))
+    ).scalar_one_or_none()
+    if not target:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    existing = await db.scalar(
+        select(Follow).where(Follow.follower_id == me.id, Follow.followee_id == target.id)
+    )
+    if existing:
+        await db.delete(existing)
+        await db.commit()
+
+    return FollowStateOut(is_following=False, follower_count=await _follower_count(db, target.id))
