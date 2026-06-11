@@ -1,10 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Clock, TrendingUp, Grid2x2, Flag, ExternalLink, Share2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Clock, TrendingUp, Grid2x2, ExternalLink, Share2 } from 'lucide-react';
 import { fetchProject } from '../api/projects';
 import { useAuth } from '../hooks/useAuth';
 import { useRelated } from '../hooks/useRelated';
 import { ProjectActions } from '../components/ProjectActions';
+import { ProjectArtwork } from '../components/ProjectArtwork';
 import { formatTimeLeft } from '../utils/time';
 import './ProjectDetailPage.css';
 
@@ -19,22 +20,24 @@ export default function ProjectDetailPage() {
     enabled: !!id,
   });
 
-  if (isLoading) return <main className="detail"><p className="detail__muted">Loading project…</p></main>;
-  if (isError || !project) return <main className="detail"><p className="detail__muted">Project not found.</p></main>;
+  if (isLoading) return <main className="detail page-container"><div className="page-message">Loading project...</div></main>;
+  if (isError || !project) return <main className="detail page-container"><div className="page-message">Project not found.</div></main>;
 
   const isOwn = !!userId && project.owner_id === userId;
   const related = (relatedData?.items ?? []).filter(p => p.id !== project.id).slice(0, 4);
 
   return (
-    <main className="detail">
-      <Link to="/" className="detail__back"><ArrowLeft size={16} /> Back to grid</Link>
+    <main className="detail page-container">
+      <Link to="/explore" className="detail__back"><ArrowLeft size={16} /> Back to Explore</Link>
       <div className="detail__grid">
-        <div>
-          <h1 className="detail__title">{project.name}</h1>
-          <div className="detail__color-bar" style={{ background: project.color }} />
-          <span className={`detail__status detail__status--${project.status}`}>{project.status}</span>
+        <div className="detail__main">
+          <ProjectArtwork project={project} className="detail__artwork" />
 
-          {project.description && <p className="detail__story" style={{ marginTop: 20 }}>{project.description}</p>}
+          <section className="detail__intro">
+            <span className={`status status--${project.status}`}>{project.status}</span>
+            <h1 className="detail__title">{project.name}</h1>
+            {project.description && <p className="detail__story">{project.description}</p>}
+          </section>
 
           <div className="detail__stats">
             <div>
@@ -52,48 +55,48 @@ export default function ProjectDetailPage() {
           </div>
 
           {project.tech_tags.length > 0 && (
-            <div className="detail__chips">
-              {project.tech_tags.map(t => <span key={t} className="detail__chip">{t}</span>)}
-            </div>
+            <section className="detail__stack">
+              <h2>Stack &amp; Tools</h2>
+              <div className="tech-tags">
+                {project.tech_tags.map(tag => <span key={tag}>{tag}</span>)}
+              </div>
+            </section>
           )}
 
-          <ProjectActions project={project} />
+          <section className="detail__interactions">
+            <h2>Support this Project</h2>
+            <ProjectActions project={project} />
+          </section>
         </div>
 
-        <aside>
-          <div className="detail__card">
-            <div className="detail__author-name">{isOwn ? 'You' : `Builder ${project.owner_id.slice(0, 6)}`}</div>
-            <div className="detail__author-role">Project owner</div>
-            <button className="btn btn--secondary" disabled title="Coming soon">
-              <Flag size={14} /> Follow
-            </button>
-            {/* TODO: follow endpoint + resolve owner handle/avatar */}
-          </div>
-
-          {project.url && (
-            <div className="detail__card">
-              <a className="detail__link" href={project.url} target="_blank" rel="noopener noreferrer">
-                <ExternalLink size={16} /> {project.url.replace(/^https?:\/\//, '')}
+        <aside className="detail__aside">
+          <div className="detail__action-card">
+            {isOwn && <p className="detail__owner-label">This is your Project</p>}
+            {project.url && (
+              <a href={project.url} target="_blank" rel="noopener noreferrer">
+                <span><ExternalLink size={18} /> Open Project</span>
+                <ArrowRight size={18} />
               </a>
-            </div>
-          )}
-
-          <div className="detail__card">
-            <Link className="detail__link" to={`/share/${project.id}`}>
-              <Share2 size={16} /> Share this project
+            )}
+            <Link to={`/share/${project.id}`}>
+              <span><Share2 size={18} /> Share Project</span>
+              <ArrowRight size={18} />
             </Link>
           </div>
 
           {related.length > 0 && (
-            <div className="detail__card">
-              <div className="detail__author-role" style={{ marginBottom: 8 }}>More on the grid</div>
+            <section className="detail__related">
+              <h2>More like this</h2>
               {related.map(p => (
                 <Link key={p.id} to={`/p/${p.id}`} className="detail__related-row">
-                  <span style={{ width: 10, height: 10, borderRadius: 3, background: p.color, flex: 'none' }} />
-                  <span>{p.name}</span>
+                  <span className="detail__related-swatch" style={{ background: p.color }} />
+                  <span>
+                    <strong>{p.name}</strong>
+                    <small>{p.description ?? `${p.momentum} momentum`}</small>
+                  </span>
                 </Link>
               ))}
-            </div>
+            </section>
           )}
         </aside>
       </div>

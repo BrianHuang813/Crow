@@ -1,90 +1,57 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
-import { GridCanvas, pixelToCell } from '../components/GridCanvas';
-import { HoverCard } from '../components/HoverCard';
-import { ProjectPanel } from '../components/ProjectPanel';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Grid2x2, Radio, TrendingUp } from 'lucide-react';
+import { ProjectCard } from '../components/ProjectCard';
 import { Sidebar } from '../components/Sidebar';
-import { useGridPoll } from '../hooks/useGridPoll';
-import { useAuth } from '../hooks/useAuth';
 import { useProjects } from '../hooks/useProjects';
 import { useActivity } from '../hooks/useActivity';
-import type { GridCell } from '../types/api';
+import './HomePage.css';
 
 export default function HomePage() {
-  const { isLoggedIn } = useAuth();
-  const { data: snapshot, isLoading, isError } = useGridPoll();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [hoveredCell, setHoveredCell] = useState<GridCell | null>(null);
-  const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
-
+  const { data: recent, isLoading, isError } = useProjects({ sort: 'recent', status: 'all', limit: 8 });
   const { data: trending } = useProjects({ sort: 'momentum', status: 'active', limit: 5 });
   const { data: builders } = useProjects({ sort: 'territory', status: 'active', limit: 5 });
   const { data: activity } = useActivity(12);
 
-  const cellMap = useMemo(() => {
-    const m = new Map<string, GridCell>();
-    for (const c of snapshot?.cells ?? []) m.set(`${c.x},${c.y}`, c);
-    return m;
-  }, [snapshot]);
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!canvasRef.current) return;
-      const canvasRect = canvasRef.current.getBoundingClientRect();
-      const wrapperRect = e.currentTarget.getBoundingClientRect();
-      const px = e.clientX - canvasRect.left;
-      const py = e.clientY - canvasRect.top;
-      const cell = pixelToCell(px, py);
-      if (cell) {
-        const cellData = cellMap.get(`${cell.x},${cell.y}`);
-        if (cellData) {
-          setHoveredCell(cellData);
-          setHoverPos({ x: e.clientX - wrapperRect.left, y: e.clientY - wrapperRect.top });
-        }
-      }
-    },
-    [cellMap]
-  );
-
-  const handleMouseLeave = useCallback(() => setHoveredCell(null), []);
-
-  if (window.innerWidth <= 820) {
-    return (
-      <div className="mobile-guard" style={{
-        height: '100vh', display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        gap: 16, padding: 24, textAlign: 'center',
-      }}>
-        <p style={{ fontFamily: 'var(--font-pixel)', fontSize: 22, color: 'var(--accent)' }}>
-          CROW
-        </p>
-        <p style={{ color: 'var(--text-muted)', fontSize: 13, maxWidth: 280 }}>
-          Digital Darwinism is a desktop experience.<br />
-          Open on your computer to enter the grid.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <main className="main main--row">
-      <div className="grid-section">
-        {isLoading && <p className="grid-status">Loading grid…</p>}
-        {isError && <p className="grid-status grid-status--error">Grid offline — retrying…</p>}
-        {!isLoading && !isError && (
-          <div className="grid-outer" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-            <GridCanvas canvasRef={canvasRef} snapshot={snapshot} />
-            {hoveredCell && (
-              <HoverCard cell={hoveredCell} canvasX={hoverPos.x} canvasY={hoverPos.y} />
+    <main className="home page-container">
+      <div className="home__layout">
+        <div className="home__feed">
+          <section className="home__hero">
+            <p className="eyebrow">Digital Darwinism</p>
+            <h1>Projects survive through community momentum.</h1>
+            <p>Discover what developers are building, support projects you believe in, and watch territory change on the live Grid.</p>
+            <div className="home__hero-actions">
+              <Link to="/explore" className="btn btn--primary"><TrendingUp size={18} /> Explore projects</Link>
+              <Link to="/grid" className="btn btn--outline"><Grid2x2 size={18} /> View the Grid</Link>
+            </div>
+          </section>
+
+          <section className="home__section">
+            <div className="home__section-heading">
+              <div>
+                <p className="eyebrow"><Radio size={13} /> Recent projects</p>
+                <h2>Latest on CROW</h2>
+              </div>
+              <Link to="/explore">View all <ArrowRight size={16} /></Link>
+            </div>
+
+            {isLoading && <div className="page-message">Loading projects...</div>}
+            {isError && <div className="page-message page-message--error">Projects are unavailable right now.</div>}
+            {!isLoading && !isError && (recent?.items.length ?? 0) === 0 && (
+              <div className="page-message">No projects are on the Grid yet.</div>
             )}
-          </div>
-        )}
+            <div className="home__project-list">
+              {(recent?.items ?? []).map(project => <ProjectCard key={project.id} project={project} />)}
+            </div>
+          </section>
+        </div>
+
+        <Sidebar
+          trending={trending?.items ?? []}
+          builders={builders?.items ?? []}
+          activity={activity?.events ?? []}
+        />
       </div>
-      <Sidebar
-        trending={trending?.items ?? []}
-        builders={builders?.items ?? []}
-        activity={activity?.events ?? []}
-      />
-      {isLoggedIn && <ProjectPanel />}
     </main>
   );
 }

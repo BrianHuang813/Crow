@@ -1,26 +1,70 @@
 .app-header {
   display: flex;
   align-items: center;
-  gap: 32px;
-  padding: 12px 40px;
-  background: var(--bg);
+  gap: 28px;
+  min-height: 68px;
+  padding: 10px max(var(--page-gutter), calc((100vw - var(--container-max)) / 2 + var(--page-gutter)));
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 50;
+  backdrop-filter: blur(14px);
 }
 .app-header__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.app-header__brand img { width: 32px; height: 32px; image-rendering: pixelated; }
-.app-header__name { font-weight: 700; color: var(--accent); font-size: 18px; }
+.app-header__brand img { width: 30px; height: 30px; image-rendering: pixelated; }
+.app-header__name { font-weight: 700; color: var(--accent); font-size: 22px; letter-spacing: -0.03em; }
 .app-header__nav { display: flex; gap: 24px; }
 .app-header__link {
-  color: var(--text); text-decoration: none; font-weight: 600; font-size: 15px;
-  padding-bottom: 2px; border-bottom: 2px solid transparent;
+  color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 14px;
+  padding: 22px 0 19px; border-bottom: 2px solid transparent;
 }
 .app-header__link.is-active { color: var(--accent); border-bottom-color: var(--accent); }
-.app-header__right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
-.app-header__credits { font-family: var(--font-pixel); font-size: 20px; color: var(--mint); }
-.app-header__cta {
-  background: var(--accent); color: var(--on-accent); text-decoration: none;
-  font-weight: 600; padding: 9px 16px; border-radius: var(--radius);
+.app-header__search {
+  margin-left: auto;
+  width: min(280px, 24vw);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: var(--surface-well);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+}
+.app-header__search:focus-within {
+  border-color: var(--outline-variant);
+  background: var(--surface);
+}
+.app-header__search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+}
+.app-header__right { display: flex; align-items: center; gap: 14px; }
+.app-header__credits { font-size: 14px; font-weight: 700; color: var(--mint); white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .app-header { gap: 18px; }
+  .app-header__search { display: none; }
+  .app-header__nav { margin-left: auto; }
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    min-height: 60px;
+    gap: 12px;
+  }
+  .app-header__brand img { width: 26px; height: 26px; }
+  .app-header__name { font-size: 18px; }
+  .app-header__nav { gap: 14px; }
+  .app-header__link { padding-block: 18px 15px; font-size: 13px; }
+  .app-header__credits { display: none; }
+  .app-header__right .login-button__handle,
+  .app-header__right .login-button__logout { display: none; }
+  .app-header__right .btn--github { padding: 8px; font-size: 0; }
 }

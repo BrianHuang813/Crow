@@ -32,13 +32,6 @@ export interface Project {
   died_at: string | null;
 }
 
-export interface ProjectCreate {
-  name: string;
-  description?: string;
-  url?: string;
-  tech_tags?: string[];
-}
-
 export interface InteractionResult {
   momentum_added: number;
   time_added_seconds: number;

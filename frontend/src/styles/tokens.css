@@ -4,7 +4,10 @@
   --surface: #ffffff;
   --surface-2: #f0edee;
   --surface-well: #f6f3f4;
+  --surface-high: #eae7e8;
   --border: #e5e1da;
+  --outline: #8d7169;
+  --outline-variant: #e0bfb6;
 
   /* Text */
   --text: #1b1b1c;
@@ -24,16 +27,25 @@
 
   /* Type */
   --font-sans: 'Inter', system-ui, sans-serif;
-  --font-pixel: 'VT323', monospace;   /* accent only: grid numbers/labels */
+  --font-pixel: 'VT323', monospace;
 
   /* Shape */
   --radius: 16px;
   --radius-pill: 9999px;
 
   /* Elevation */
-  --shadow-card: 0 4px 24px rgba(27, 27, 28, 0.08);
+  --shadow-card: 0 8px 30px rgba(27, 27, 28, 0.045);
+  --shadow-card-hover: 0 14px 38px rgba(27, 27, 28, 0.09);
 
   /* Layout */
   --container-max: 1280px;
   --margin-desktop: 40px;
+  --page-gutter: 40px;
+}
+
+@media (max-width: 720px) {
+  :root {
+    --page-gutter: 16px;
+    --margin-desktop: 16px;
+  }
 }

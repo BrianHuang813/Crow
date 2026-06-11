@@ -1,13 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import { Header } from './Header';
-import { CrowMascot } from './CrowMascot';
+import { Footer } from './Footer';
 
 export function Layout() {
   return (
-    <>
+    <div className="site-shell">
       <Header />
-      <Outlet />
-      <CrowMascot />
-    </>
+      <div className="site-shell__content">
+        <Outlet />
+      </div>
+      <Footer />
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '../../hooks/useAuth';
 import { ProjectPanel } from '../ProjectPanel';
@@ -26,7 +26,6 @@ vi.mock('../../hooks/useAuth', async (importOriginal) => {
 
 vi.mock('../../api/projects', () => ({
   fetchMyProject: vi.fn().mockResolvedValue(null),
-  createProject: vi.fn().mockResolvedValue({} as Project),
   abandonProject: vi.fn().mockResolvedValue({} as Project),
   fetchProject: vi.fn(),
   fetchMe: vi.fn().mockResolvedValue({
@@ -51,12 +50,12 @@ beforeEach(() => {
 });
 
 describe('ProjectPanel — no project', () => {
-  it('shows submit form when user has no active project', async () => {
+  it('renders no web submission UI when user has no active project', async () => {
     vi.mocked(fetchMyProject).mockResolvedValue(null);
     const qc = makeQc();
-    render(<ProjectPanel />, { wrapper: wrapper(qc) });
-    expect(await screen.findByPlaceholderText('Project name')).toBeInTheDocument();
-    expect(screen.getByText('Submit to Grid')).toBeInTheDocument();
+    const { container } = render(<ProjectPanel />, { wrapper: wrapper(qc) });
+    await waitFor(() => expect(container).toBeEmptyDOMElement());
+    expect(screen.queryByText(/submit/i)).not.toBeInTheDocument();
   });
 });
 
