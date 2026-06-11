@@ -15,13 +15,13 @@ describe('ShareCard', () => {
     render(<ShareCard project={project} background="cream" showTech showStats />);
     expect(screen.getByText('EchoFlow')).toBeInTheDocument();
     expect(screen.getByText('React')).toBeInTheDocument();
-    expect(screen.getByText('24')).toBeInTheDocument();
+    expect(screen.getByText(/24 cells/i)).toBeInTheDocument();
   });
 
   it('hides tech chips and stats when toggled off', () => {
     render(<ShareCard project={project} background="cream" showTech={false} showStats={false} />);
     expect(screen.queryByText('React')).not.toBeInTheDocument();
-    expect(screen.queryByText('24')).not.toBeInTheDocument();
+    expect(screen.queryByText(/24 cells/i)).not.toBeInTheDocument();
   });
 
   it('applies the background variant class', () => {

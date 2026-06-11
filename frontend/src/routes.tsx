@@ -1,8 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import HomePage from './pages/HomePage';
+import ExplorePage from './pages/ExplorePage';
+import GridPage from './pages/GridPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
-import SubmitPage from './pages/SubmitPage';
 import ProfilePage from './pages/ProfilePage';
 import SharePage from './pages/SharePage';
 import { AuthCallback } from './components/AuthCallback';
@@ -13,7 +14,8 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: '/', element: <HomePage /> },
-      { path: '/submit', element: <SubmitPage /> },
+      { path: '/explore', element: <ExplorePage /> },
+      { path: '/grid', element: <GridPage /> },
       { path: '/p/:id', element: <ProjectDetailPage /> },
       { path: '/u/:handle', element: <ProfilePage /> },
       { path: '/share/:id', element: <SharePage /> },

@@ -12,7 +12,10 @@ describe('Header', () => {
   it('shows brand, nav links, and credits when logged in', () => {
     render(<MemoryRouter><Header /></MemoryRouter>);
     expect(screen.getByText('CROW')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /grid/i })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'Explore' })).toHaveAttribute('href', '/explore');
+    expect(screen.getByRole('link', { name: 'Grid' })).toHaveAttribute('href', '/grid');
     expect(screen.getByText(/42/)).toBeInTheDocument();
+    expect(screen.queryByText(/submit project/i)).not.toBeInTheDocument();
   });
 });

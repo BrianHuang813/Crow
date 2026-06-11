@@ -8,4 +8,6 @@
 *.har
 
 # Local design references / scratch
-stitch_remix_of_ai_creator_feed/
+stitch_ai_creator_feed/
+
+docs/

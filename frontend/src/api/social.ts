@@ -28,6 +28,22 @@ export interface UserProfile {
   created_at: string;
   project_count: number;
   territory_total: number;
+  follower_count: number;
+  following_count: number;
+  is_following: boolean;
+}
+
+export interface FollowState {
+  is_following: boolean;
+  follower_count: number;
+}
+
+export function followUser(handle: string): Promise<FollowState> {
+  return apiFetch<FollowState>(`/users/${encodeURIComponent(handle)}/follow`, { method: 'POST' });
+}
+
+export function unfollowUser(handle: string): Promise<FollowState> {
+  return apiFetch<FollowState>(`/users/${encodeURIComponent(handle)}/follow`, { method: 'DELETE' });
 }
 
 export interface ListParams {

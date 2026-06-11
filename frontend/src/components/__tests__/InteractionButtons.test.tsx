@@ -52,7 +52,6 @@ vi.mock('../../api/projects', () => ({
     died_at: null,
   }),
   fetchMyProject: vi.fn(),
-  createProject: vi.fn(),
   abandonProject: vi.fn(),
   fetchMe: vi.fn(),
 }));

@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { toPng } from 'html-to-image';
-import { Download, Link2 } from 'lucide-react';
+import { ArrowLeft, Download, Link2 } from 'lucide-react';
 import { fetchProject } from '../api/projects';
 import { ShareCard, type ShareBackground } from '../components/ShareCard';
 import './SharePage.css';
@@ -27,8 +27,8 @@ export default function SharePage() {
     enabled: !!id,
   });
 
-  if (isLoading) return <main className="share"><p className="share__muted">Loading…</p></main>;
-  if (isError || !project) return <main className="share"><p className="share__muted">Project not found.</p></main>;
+  if (isLoading) return <main className="share page-container"><div className="page-message">Loading...</div></main>;
+  if (isError || !project) return <main className="share page-container"><div className="page-message">Project not found.</div></main>;
 
   async function handleDownload() {
     if (!cardRef.current) return;
@@ -50,17 +50,26 @@ export default function SharePage() {
   }
 
   return (
-    <main className="share">
+    <main className="share page-container">
+      <Link className="share__back" to={`/p/${project.id}`}><ArrowLeft size={16} /> Back to Project</Link>
       <div className="share__grid">
         <div className="share__preview">
+          <div className="share__preview-heading">
+            <div>
+              <p className="eyebrow">Share asset</p>
+              <h1>Card Preview</h1>
+            </div>
+            <span>9:16</span>
+          </div>
           <ShareCard ref={cardRef} project={project} background={background} showTech={showTech} showStats={showStats} />
         </div>
 
         <aside className="share__panel">
           <h2 className="share__panel-title">Customize Card</h2>
+          <p className="share__panel-copy">Choose what appears in the downloadable Project card.</p>
 
           <div className="share__group">
-            <div className="share__group-label">Background</div>
+            <div className="share__group-label">Background style</div>
             <div className="share__bg-options">
               {BACKGROUNDS.map(b => (
                 <button
@@ -81,14 +90,14 @@ export default function SharePage() {
               <input type="checkbox" checked={showTech} onChange={e => setShowTech(e.target.checked)} aria-label="Show tech stack" />
             </label>
             <label className="share__toggle">
-              Show stats
+              Show Project stats
               <input type="checkbox" checked={showStats} onChange={e => setShowStats(e.target.checked)} aria-label="Show stats" />
             </label>
           </div>
 
           <div className="share__actions">
             <button className="btn btn--primary" onClick={handleDownload}>
-              <Download size={15} /> Download PNG
+              <Download size={15} /> Download high-res card
             </button>
             <button className="btn btn--secondary" onClick={handleCopy}>
               <Link2 size={15} /> {copied ? 'Copied!' : 'Copy link'}

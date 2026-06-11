@@ -1,0 +1,118 @@
+import { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Search } from 'lucide-react';
+import { useProjects } from '../hooks/useProjects';
+import type { Project } from '../types/api';
+import type { ListParams } from '../api/social';
+import { ProjectCard } from '../components/ProjectCard';
+import './ExplorePage.css';
+
+const PAGE_SIZE = 12;
+
+const SORTS: { label: string; value: NonNullable<ListParams['sort']> }[] = [
+  { label: 'Hot', value: 'momentum' },
+  { label: 'New', value: 'recent' },
+  { label: 'Top', value: 'territory' },
+];
+
+export default function ExplorePage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const sort = (searchParams.get('sort') as ListParams['sort']) ?? 'momentum';
+  const tag = searchParams.get('tag') ?? undefined;
+  const query = searchParams.get('q')?.trim().toLowerCase() ?? '';
+  const { data, isLoading, isError } = useProjects({ status: 'all', sort, tag, limit });
+
+  const projects = useMemo(() => {
+    const items = data?.items ?? [];
+    if (!query) return items;
+    return items.filter(project =>
+      project.name.toLowerCase().includes(query) ||
+      project.description?.toLowerCase().includes(query) ||
+      project.tech_tags.some(projectTag => projectTag.toLowerCase().includes(query))
+    );
+  }, [data?.items, query]);
+
+  const tags = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const project of data?.items ?? []) {
+      for (const projectTag of project.tech_tags) {
+        counts.set(projectTag, (counts.get(projectTag) ?? 0) + 1);
+      }
+    }
+    return [...counts].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([name]) => name);
+  }, [data?.items]);
+
+  function updateParams(next: { sort?: string; tag?: string | null; q?: string }) {
+    const params = new URLSearchParams(searchParams);
+    if (next.sort) params.set('sort', next.sort);
+    if (next.tag === null) params.delete('tag');
+    else if (next.tag) params.set('tag', next.tag);
+    if (next.q !== undefined) {
+      if (next.q.trim()) params.set('q', next.q);
+      else params.delete('q');
+    }
+    setLimit(PAGE_SIZE);
+    setSearchParams(params);
+  }
+
+  return (
+    <main className="explore page-container">
+      <section className="explore__intro">
+        <div>
+          <p className="eyebrow">Project directory</p>
+          <h1>Explore the Grid</h1>
+          <p>Discover active projects, compare momentum, and find builders competing for territory.</p>
+        </div>
+        <div className="segmented-control" aria-label="Project sorting">
+          {SORTS.map(option => (
+            <button
+              key={option.value}
+              className={sort === option.value ? 'is-active' : ''}
+              onClick={() => updateParams({ sort: option.value })}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <div className="explore__search">
+        <Search size={18} />
+        <input
+          value={searchParams.get('q') ?? ''}
+          onChange={event => updateParams({ q: event.target.value })}
+          placeholder="Search project names, descriptions, or tech..."
+          aria-label="Filter projects"
+        />
+      </div>
+
+      <div className="explore__tags" aria-label="Technology filters">
+        <button className={!tag ? 'is-active' : ''} onClick={() => updateParams({ tag: null })}>All technologies</button>
+        {tags.map(item => (
+          <button key={item} className={tag === item ? 'is-active' : ''} onClick={() => updateParams({ tag: item })}>
+            {item}
+          </button>
+        ))}
+      </div>
+
+      {isLoading && <PageMessage>Loading projects...</PageMessage>}
+      {isError && <PageMessage>Projects are unavailable right now.</PageMessage>}
+      {!isLoading && !isError && projects.length === 0 && <PageMessage>No projects match these filters.</PageMessage>}
+
+      <section className="explore__grid" aria-label="Projects">
+        {projects.map((project: Project) => <ProjectCard key={project.id} project={project} />)}
+      </section>
+
+      {data && limit < data.total && (
+        <button className="btn btn--outline explore__more" onClick={() => setLimit(current => current + PAGE_SIZE)}>
+          Load more projects
+        </button>
+      )}
+    </main>
+  );
+}
+
+function PageMessage({ children }: { children: React.ReactNode }) {
+  return <div className="page-message">{children}</div>;
+}

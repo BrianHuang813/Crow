@@ -84,21 +84,3 @@
   white-space: nowrap;
 }
 .panel-card__link:hover { text-decoration: underline; }
-
-.submit-form {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  box-shadow: var(--shadow-card);
-}
-
-.submit-form__title {
-  font-family: var(--font-pixel);
-  font-size: 18px;
-  color: var(--text);
-  margin-bottom: 4px;
-}
