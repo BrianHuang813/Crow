@@ -1,0 +1,146 @@
+.onboard {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(27, 27, 28, 0.45);
+  backdrop-filter: blur(3px);
+  animation: onboard-fade 0.18s ease-out;
+}
+
+.onboard__card {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card-hover);
+  padding: 32px 28px 24px;
+  animation: onboard-rise 0.22s ease-out;
+}
+
+.onboard__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+}
+.onboard__close:hover { background: var(--surface-well); color: var(--text); }
+
+.onboard__logo {
+  width: 56px;
+  height: 56px;
+  image-rendering: pixelated;
+  margin-bottom: 14px;
+}
+
+.onboard__title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+
+.onboard__lead {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.55;
+  margin-bottom: 22px;
+}
+
+.onboard__steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.onboard__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-well);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 10px 8px 8px;
+}
+
+.onboard__num {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.onboard__cmd {
+  flex: 1;
+  font-family: var(--font-pixel);
+  font-size: 17px;
+  color: var(--text);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.onboard__copy {
+  flex: none;
+  display: inline-flex;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+}
+.onboard__copy:hover { color: var(--accent); border-color: var(--accent); }
+
+.onboard__then {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 22px;
+}
+.onboard__then code {
+  font-family: var(--font-pixel);
+  font-size: 15px;
+  color: var(--text);
+}
+
+.onboard__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@keyframes onboard-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes onboard-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboard, .onboard__card { animation: none; }
+}
