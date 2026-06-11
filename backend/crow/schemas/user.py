@@ -9,3 +9,11 @@ class UserProfileOut(BaseModel):
     created_at: datetime
     project_count: int
     territory_total: int
+    follower_count: int
+    following_count: int
+    is_following: bool
+
+
+class FollowStateOut(BaseModel):
+    is_following: bool
+    follower_count: int

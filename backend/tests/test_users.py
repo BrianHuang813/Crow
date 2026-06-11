@@ -1,6 +1,7 @@
 import pytest
 from datetime import datetime, timedelta, timezone
-from crow.models import User, Project, Interaction
+from crow.models import User, Project, Interaction, Follow
+from crow.auth import create_token
 
 
 def _now():
@@ -68,3 +69,42 @@ async def test_profile_never_leaks_private_fields(client, db):
 @pytest.mark.asyncio
 async def test_profile_unknown_handle_404(client, db):
     assert (await client.get("/api/users/ghost")).status_code == 404
+
+
+async def make_follow(db, follower, followee):
+    db.add(Follow(follower_id=follower.id, followee_id=followee.id))
+    await db.commit()
+
+
+def auth(user):
+    return {"Authorization": f"Bearer {create_token(str(user.id))}"}
+
+
+@pytest.mark.asyncio
+async def test_profile_has_follow_counts(client, db):
+    alice = await make_user(db, handle="alice", gh="1")
+    bob = await make_user(db, handle="bob", gh="2")
+    carol = await make_user(db, handle="carol", gh="3")
+    await make_follow(db, bob, alice)     # bob follows alice
+    await make_follow(db, carol, alice)   # carol follows alice
+    await make_follow(db, alice, bob)     # alice follows bob
+
+    body = (await client.get("/api/users/alice")).json()
+    assert body["follower_count"] == 2
+    assert body["following_count"] == 1
+
+
+@pytest.mark.asyncio
+async def test_is_following_reflects_caller(client, db):
+    alice = await make_user(db, handle="alice", gh="1")
+    bob = await make_user(db, handle="bob", gh="2")
+    await make_follow(db, bob, alice)  # bob follows alice
+
+    body = (await client.get("/api/users/alice", headers=auth(bob))).json()
+    assert body["is_following"] is True
+
+    self_body = (await client.get("/api/users/alice", headers=auth(alice))).json()
+    assert self_body["is_following"] is False
+
+    anon = (await client.get("/api/users/alice")).json()
+    assert anon["is_following"] is False
