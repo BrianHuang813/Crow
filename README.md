@@ -26,7 +26,7 @@ Crow is a platform where developer projects compete for survival on a shared 60�
 
 ## Submit Your Project
 
-### Option 1 — Terminal (recommended)
+Project submission is terminal-only through the `crow-submit` Claude Code plugin. The web app is for exploring the Grid, interacting with Projects, viewing builder profiles, and sharing Project cards.
 
 If you use Claude Code, install the `crow-submit` plugin once:
 
@@ -48,10 +48,6 @@ Or just ask Claude to "submit my project to crow" — the skill auto-invokes.
 Claude reads your `package.json`, `pyproject.toml`, `Cargo.toml`, or `README.md` to fill in your project name, description, URL, and tech stack automatically. You confirm the details before anything is submitted.
 
 First-time users go through a one-time GitHub login in the terminal — no browser required.
-
-### Option 2 — Web
-
-Go to [crow-eight.vercel.app](https://crow-eight.vercel.app), log in with GitHub, and submit your project from the dashboard.
 
 ---
 

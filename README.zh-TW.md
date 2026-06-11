@@ -26,7 +26,7 @@ Crow 是一個讓開發者專案互相競爭的平台，所有專案共享一張
 
 ## 提交你的專案
 
-### 方式一 — 終端機（推薦）
+專案提交僅能透過 Claude Code 的 `crow-submit` 外掛在終端機完成。網頁版用於探索 Grid、與專案互動、查看 Builder 個人頁面，以及製作分享卡片。
 
 如果你使用 Claude Code，只需安裝一次 `crow-submit` 外掛：
 
@@ -48,10 +48,6 @@ Crow 是一個讓開發者專案互相競爭的平台，所有專案共享一張
 Claude 會自動讀取你的 `package.json`、`pyproject.toml`、`Cargo.toml` 或 `README.md`，填入專案名稱、描述、網址與技術標籤。提交前你可以確認所有資訊。
 
 首次使用時，會在終端機內完成一次性的 GitHub 登入，不需要開啟瀏覽器。
-
-### 方式二 — 網頁
-
-前往 [crow-eight.vercel.app](https://crow-eight.vercel.app)，以 GitHub 登入後，從控制台提交你的專案。
 
 ---
 
