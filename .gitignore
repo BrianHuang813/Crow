@@ -11,3 +11,6 @@
 stitch_ai_creator_feed/
 
 docs/
+
+# Heavy raw mascot source GIFs — ship optimized webp in public/mascot/ instead
+frontend/crow_*.gif
