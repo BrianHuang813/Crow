@@ -1,0 +1,165 @@
+name: Manual Production Deploy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  test-backend:
+    name: Verify backend
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: crow_test
+          POSTGRES_USER: crow
+          POSTGRES_PASSWORD: crow
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql+asyncpg://crow:crow@localhost:5432/crow_test
+      REDIS_URL: redis://localhost:6379/0
+      GITHUB_CLIENT_ID: ci-placeholder
+      GITHUB_CLIENT_SECRET: ci-placeholder
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+        working-directory: backend
+
+      - name: Verify migrations
+        run: |
+          test "$(alembic heads | grep -c .)" -eq 1
+          alembic upgrade head
+        working-directory: backend
+
+      - name: Run tests
+        run: pytest tests/ -v
+        working-directory: backend
+
+  test-frontend:
+    name: Verify frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: frontend
+
+      - name: Run tests
+        run: yarn test
+        working-directory: frontend
+
+      - name: Build
+        run: yarn build
+        working-directory: frontend
+
+  deploy-backend:
+    name: Deploy Railway
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    environment: backend-production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Railway CLI
+        run: npm install --global @railway/cli
+
+      - name: Deploy API
+        run: railway up --service api --ci --message "GitHub Actions ${GITHUB_SHA}"
+        working-directory: backend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Wait for API
+        run: curl --fail --silent --show-error --retry 20 --retry-delay 6 --retry-all-errors "${{ vars.BACKEND_URL }}/api/grid" > /dev/null
+
+      - name: Deploy worker
+        run: railway up --service worker --ci --message "GitHub Actions ${GITHUB_SHA}"
+        working-directory: backend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deploy beat
+        run: railway up --service beat --ci --message "GitHub Actions ${GITHUB_SHA}"
+        working-directory: backend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+  deploy-frontend:
+    name: Deploy Vercel
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+    environment: frontend-production
+    env:
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel configuration
+        run: vercel pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
+        working-directory: frontend
+
+      - name: Build frontend
+        run: vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+        working-directory: frontend
+
+      - name: Deploy frontend
+        run: vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}"
+        working-directory: frontend
+
+      - name: Smoke test frontend routes
+        run: |
+          for path in / /explore /grid; do
+            curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-all-errors "${{ vars.FRONTEND_URL }}${path}" > /dev/null
+          done
+
+      - name: Smoke test frontend API target
+        run: |
+          curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-all-errors \
+            "${{ vars.VITE_API_BASE_URL }}/api/grid" > /dev/null
