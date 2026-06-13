@@ -2,8 +2,8 @@
   position: fixed;
   bottom: 64px; /* sits on the bottom edge, clear of the footer */
   z-index: 60;
-  width: 112px;
-  height: 112px;
+  width: 88px;
+  height: 88px;
   pointer-events: auto;
 }
 
@@ -39,5 +39,5 @@
 .mascot__mute:hover { color: var(--accent); border-color: var(--accent); }
 
 @media (max-width: 720px) {
-  .mascot { width: 84px; height: 84px; }
+  .mascot { width: 64px; height: 64px; }
 }
