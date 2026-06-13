@@ -1,18 +1,17 @@
 import { describe, it, expect } from 'vitest';
-import { pickSpawn, nextGap, CORNERS, CLIPS, GAP_MIN, GAP_MAX } from './spawn';
+import { pickSpawn, nextGap, CLIPS, MIN_LEFT, MAX_LEFT, GAP_MIN, GAP_MAX } from './spawn';
 
 describe('pickSpawn', () => {
-  it('picks a valid corner and clip', () => {
-    const s = pickSpawn(() => 0);
-    expect(CORNERS).toContain(s.corner);
+  it('picks a valid bottom-edge position and clip', () => {
+    const s = pickSpawn(() => 0.5);
+    expect(s.leftPct).toBeGreaterThanOrEqual(MIN_LEFT);
+    expect(s.leftPct).toBeLessThanOrEqual(MAX_LEFT);
     expect(CLIPS).toContain(s.clip);
   });
 
-  it('uses the rng to index corner and clip', () => {
-    // rng=0 → first of each
-    expect(pickSpawn(() => 0)).toEqual({ corner: 'tl', clip: '/mascot/dance.webp' });
-    // rng≈0.99 → last of each
-    expect(pickSpawn(() => 0.99)).toEqual({ corner: 'br', clip: '/mascot/soccer.webp' });
+  it('maps rng to the edge range and clip index', () => {
+    expect(pickSpawn(() => 0)).toEqual({ leftPct: MIN_LEFT, clip: '/mascot/dance.webp' });
+    expect(pickSpawn(() => 0.99)).toEqual({ leftPct: MIN_LEFT + 0.99 * (MAX_LEFT - MIN_LEFT), clip: '/mascot/soccer.webp' });
   });
 });
 
