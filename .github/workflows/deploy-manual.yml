@@ -102,7 +102,6 @@ jobs:
 
       - name: Deploy API
         run: railway up --service api --ci --message "GitHub Actions ${GITHUB_SHA}"
-        working-directory: backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
@@ -111,13 +110,11 @@ jobs:
 
       - name: Deploy worker
         run: railway up --service worker --ci --message "GitHub Actions ${GITHUB_SHA}"
-        working-directory: backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy beat
         run: railway up --service beat --ci --message "GitHub Actions ${GITHUB_SHA}"
-        working-directory: backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
