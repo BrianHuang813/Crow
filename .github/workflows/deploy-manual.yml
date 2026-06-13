@@ -13,8 +13,54 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - id: filter
+        name: Select deployment targets
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "backend=true" >> "$GITHUB_OUTPUT"
+            echo "frontend=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          changed_files="$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")"
+          echo "$changed_files"
+
+          backend=false
+          frontend=false
+
+          if grep -Eq '^backend/' <<< "$changed_files"; then
+            backend=true
+          fi
+
+          if grep -Eq '^frontend/' <<< "$changed_files"; then
+            frontend=true
+          fi
+
+          if grep -Fxq '.github/workflows/deploy-manual.yml' <<< "$changed_files"; then
+            backend=true
+            frontend=true
+          fi
+
+          echo "backend=$backend" >> "$GITHUB_OUTPUT"
+          echo "frontend=$frontend" >> "$GITHUB_OUTPUT"
+
   test-backend:
     name: Verify backend
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
 
     services:
@@ -63,6 +109,8 @@ jobs:
 
   test-frontend:
     name: Verify frontend
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -88,7 +136,8 @@ jobs:
 
   deploy-backend:
     name: Deploy Railway
-    needs: [test-backend, test-frontend]
+    needs: [changes, test-backend]
+    if: needs.changes.outputs.backend == 'true' && needs.test-backend.result == 'success'
     runs-on: ubuntu-latest
     environment: backend-production
 
@@ -122,7 +171,8 @@ jobs:
 
   deploy-frontend:
     name: Deploy Vercel
-    needs: deploy-backend
+    needs: [changes, test-frontend]
+    if: needs.changes.outputs.frontend == 'true' && needs.test-frontend.result == 'success'
     runs-on: ubuntu-latest
     environment: frontend-production
     env:
