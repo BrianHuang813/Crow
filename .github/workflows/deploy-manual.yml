@@ -134,6 +134,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install frontend dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: frontend
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
