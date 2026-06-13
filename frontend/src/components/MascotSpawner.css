@@ -1,16 +1,11 @@
 .mascot {
   position: fixed;
+  bottom: 64px; /* sits on the bottom edge, clear of the footer */
   z-index: 60;
   width: 112px;
   height: 112px;
   pointer-events: auto;
 }
-
-/* Corners — offset clear of the sticky header (top) and footer (bottom). */
-.mascot--tl { top: 84px; left: 18px; }
-.mascot--tr { top: 84px; right: 18px; }
-.mascot--bl { bottom: 72px; left: 18px; }
-.mascot--br { bottom: 72px; right: 18px; }
 
 .mascot__img {
   width: 100%;

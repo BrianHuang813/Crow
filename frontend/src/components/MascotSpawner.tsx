@@ -65,8 +65,9 @@ export function MascotSpawner() {
       <AnimatePresence>
         {spawn && (
           <motion.div
-            key={`${spawn.corner}-${spawn.clip}`}
-            className={`mascot mascot--${spawn.corner}`}
+            key={`${spawn.leftPct}-${spawn.clip}`}
+            className="mascot"
+            style={{ left: `${spawn.leftPct}%` }}
             data-testid="mascot"
             initial={{ opacity: 0, y: 26, scale: 0.7 }}
             animate={{ opacity: 1, y: [26, -12, 0], scale: 1 }}
