@@ -11,7 +11,7 @@ import HomePage from '../HomePage';
 describe('HomePage', () => {
   it('renders the project feed shell and valid primary routes', () => {
     render(<MemoryRouter><HomePage /></MemoryRouter>);
-    expect(screen.getByRole('heading', { name: /projects survive/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /submit ur project now/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /explore projects/i })).toHaveAttribute('href', '/explore');
     expect(screen.getByRole('link', { name: /view the grid/i })).toHaveAttribute('href', '/grid');
     expect(screen.getByText('Trending')).toBeInTheDocument();

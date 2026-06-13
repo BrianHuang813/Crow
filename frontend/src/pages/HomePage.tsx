@@ -17,9 +17,8 @@ export default function HomePage() {
       <div className="home__layout">
         <div className="home__feed">
           <section className="home__hero">
-            <p className="eyebrow">Digital Darwinism</p>
-            <h1>Projects survive through community momentum.</h1>
-            <p>Discover what developers are building, support projects you believe in, and watch territory change on the live Grid.</p>
+            <p className="eyebrow">Crow / Claude</p>
+            <h1>SUBMIT UR PROJECT NOW!</h1>
             <div className="home__hero-actions">
               <Link to="/explore" className="btn btn--primary"><TrendingUp size={18} /> Explore projects</Link>
               <Link to="/grid" className="btn btn--outline"><Grid2x2 size={18} /> View the Grid</Link>
