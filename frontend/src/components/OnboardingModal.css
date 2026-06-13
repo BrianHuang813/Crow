@@ -20,7 +20,6 @@
   border-radius: var(--radius);
   box-shadow: var(--shadow-card-hover);
   padding: 32px 28px 24px;
-  animation: onboard-rise 0.22s ease-out;
 }
 
 .onboard__close {
@@ -136,11 +135,7 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes onboard-rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 @media (prefers-reduced-motion: reduce) {
-  .onboard, .onboard__card { animation: none; }
+  .onboard { animation: none; }
 }
