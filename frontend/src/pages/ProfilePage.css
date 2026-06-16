@@ -45,15 +45,16 @@
   margin-bottom: 42px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  border-block: 1px solid var(--border);
 }
 
+/* No per-stat card — a single divided rail. */
 .profile__stat {
-  padding: 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
+  padding: 18px 24px;
+}
+
+.profile__stat + .profile__stat {
+  border-left: 1px solid var(--border);
 }
 
 .profile__stat-label {
@@ -82,24 +83,23 @@
   margin-top: 32px;
 }
 
+/* Flat list rows separated by hairlines — not a stack of floating cards. */
 .profile__project {
-  margin-top: 10px;
-  padding: 18px;
+  padding: 15px 12px;
   display: flex;
   align-items: center;
   gap: 14px;
   color: var(--text);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   text-decoration: none;
+  transition: background 150ms ease;
 }
 
-.profile__project:hover { border-color: var(--outline-variant); }
+.profile__project:hover { background: var(--surface-well); }
 .profile__project-swatch { width: 14px; height: 14px; border-radius: 4px; flex: none; }
 .profile__project-name { flex: 1; font-weight: 700; }
-.profile__status { padding: 4px 10px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; }
+.profile__status { padding: 4px 8px; border-radius: var(--radius-label); font-size: 11px; font-weight: 700; }
 .profile__status--alive { background: color-mix(in srgb, var(--alive) 12%, white); color: var(--alive); }
 .profile__status--dying { background: color-mix(in srgb, var(--dying) 14%, white); color: var(--dying); }
 .profile__status--dead { background: var(--surface-2); color: #706966; }

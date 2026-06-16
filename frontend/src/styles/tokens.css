@@ -37,13 +37,16 @@
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-pixel: 'VT323', monospace;
 
-  /* Shape */
+  /* Shape — varied radii: tighter on inner labels, softer on containers */
   --radius: 16px;
+  --radius-sm: 8px;
+  --radius-label: 6px;
   --radius-pill: 9999px;
 
   /* Elevation — shadows tinted with the brand hue, not neutral black */
   --shadow-card: 0 8px 30px rgba(172, 53, 9, 0.06);
-  --shadow-card-hover: 0 14px 38px rgba(172, 53, 9, 0.11);
+  --shadow-card-hover: 0 14px 32px rgba(172, 53, 9, 0.10);
+  --shadow-lift: 0 10px 28px rgba(172, 53, 9, 0.08);
 
   /* Layout */
   --container-max: 1280px;

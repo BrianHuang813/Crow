@@ -58,15 +58,20 @@
 }
 
 .explore__tags button {
-  padding: 8px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  background: var(--surface);
+  padding: 7px 13px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--surface-well);
   color: var(--text-muted);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+
+.explore__tags button:hover {
+  color: var(--text);
 }
 
 .explore__tags button.is-active {
@@ -93,26 +98,24 @@
 .explore__users {
   margin-top: 32px;
   max-width: 720px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  border-top: 1px solid var(--border);
 }
 
+/* Flat list rows with hairline separators — no per-row card. */
 .user-result {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg, 16px);
-  background: var(--surface);
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .user-result:hover {
-  border-color: var(--accent);
+  background: var(--surface-well);
 }
 
 .user-result__avatar {

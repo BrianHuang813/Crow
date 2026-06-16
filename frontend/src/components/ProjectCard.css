@@ -5,12 +5,13 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  transition: box-shadow 180ms ease;
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
 }
 
 .project-card:hover {
-  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-3px);
+  border-color: var(--outline-variant);
+  box-shadow: var(--shadow-lift);
 }
 
 .project-card__artwork {

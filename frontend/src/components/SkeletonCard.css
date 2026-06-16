@@ -3,7 +3,6 @@
   border-radius: var(--radius);
   background: var(--surface);
   overflow: hidden;
-  box-shadow: var(--shadow-card);
 }
 
 .skeleton-card__art {
@@ -14,7 +13,7 @@
 .skeleton-card__body { padding: 22px; display: flex; flex-direction: column; gap: 12px; }
 .skeleton-line { height: 13px; border-radius: 6px; }
 .skeleton-card__tags { display: flex; gap: 7px; margin-top: 4px; }
-.skeleton-pill { width: 54px; height: 22px; border-radius: var(--radius-pill); }
+.skeleton-pill { width: 54px; height: 20px; border-radius: var(--radius-label); }
 
 /* Shimmer sweep — warm, tinted to the brand rather than grey. */
 .shimmer {

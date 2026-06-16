@@ -114,7 +114,7 @@ select {
 
 .badge {
   padding: 2px 7px;
-  border-radius: 999px; font-family: var(--font-pixel); font-size: 14px;
+  border-radius: var(--radius-label); font-family: var(--font-pixel); font-size: 14px;
 }
 .badge--alive { background: color-mix(in srgb, var(--alive) 16%, white); color: var(--alive); }
 .badge--dying { background: color-mix(in srgb, var(--dying) 16%, white); color: var(--dying); }
@@ -163,10 +163,11 @@ select {
   text-transform: uppercase;
 }
 
+/* Lifecycle status — a square flag, not a pill. Color carries the signal. */
 .status {
   display: inline-flex;
-  padding: 4px 9px;
-  border-radius: var(--radius-pill);
+  padding: 4px 8px;
+  border-radius: var(--radius-label);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -180,17 +181,22 @@ select {
 .tech-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 6px;
 }
 
+/* Quiet text labels — no saturated fill, no pill. The "#" does the work. */
 .tech-tags span {
-  padding: 5px 10px;
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--mint) 9%, white);
-  border: 1px solid color-mix(in srgb, var(--mint) 18%, white);
-  color: var(--mint);
+  padding: 3px 8px;
+  border-radius: var(--radius-label);
+  background: var(--surface-well);
+  color: var(--text-muted);
   font-size: 11px;
   font-weight: 600;
+}
+.tech-tags span::before {
+  content: '#';
+  opacity: 0.45;
+  margin-right: 1px;
 }
 
 .segmented-control {
@@ -219,10 +225,7 @@ select {
 
 .page-message {
   margin-top: 32px;
-  padding: 32px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
+  padding: 40px 24px;
   color: var(--text-muted);
   text-align: center;
 }
