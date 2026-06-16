@@ -1,0 +1,116 @@
+.launch {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--arena-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 1;
+  transform: scale(1);
+  transform-origin: center;
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.5, 0, 0.75, 0);
+}
+/* Zoom the whole splash forward as it leaves — a push into the page. */
+.launch--closing {
+  opacity: 0;
+  transform: scale(1.6);
+  pointer-events: none;
+}
+
+/* The igniting board fills the viewport. */
+.launch__grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(28, 1fr);
+  grid-template-rows: repeat(16, 1fr);
+  gap: 3px;
+  padding: 3px;
+}
+
+.launch__cell {
+  border-radius: 2px;
+  opacity: 0;
+  background: var(--c);
+  animation: launch-ignite 0.6s ease-out var(--d) both;
+}
+
+@keyframes launch-ignite {
+  0%   { opacity: 0; transform: scale(0.4); background: var(--accent-2); }
+  45%  { opacity: 1; transform: scale(1); background: var(--accent-2); box-shadow: 0 0 10px var(--accent-2); }
+  100% { opacity: 1; transform: scale(1); background: var(--c); box-shadow: none; }
+}
+
+/* Brand emerges once the sweep is well underway. */
+.launch__brand {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  opacity: 0;
+  animation: launch-brand 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.25s both;
+}
+@keyframes launch-brand {
+  from { opacity: 0; transform: translateY(14px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.launch__logo {
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.55));
+  animation: launch-float 3s ease-in-out 1.9s infinite;
+}
+@keyframes launch-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+.launch__word {
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  font-size: clamp(72px, 17vw, 150px);
+  letter-spacing: 0.12em;
+  line-height: 0.9;
+  color: var(--arena-text);
+  text-shadow:
+    0 0 18px color-mix(in srgb, var(--accent-2) 70%, transparent),
+    0 0 46px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.launch__hud {
+  font-family: var(--font-pixel);
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  color: var(--accent-2);
+  animation: launch-blink 1.1s steps(1) 1.9s infinite;
+}
+@keyframes launch-blink {
+  0%, 70%, 100% { opacity: 1; }
+  80%           { opacity: 0.25; }
+}
+
+.launch__skip {
+  position: absolute;
+  right: 22px;
+  bottom: 20px;
+  z-index: 1;
+  padding: 7px 14px;
+  border: 1px solid var(--arena-line);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--arena-surface) 70%, transparent);
+  color: var(--arena-text-muted);
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+.launch__skip:hover { color: var(--arena-text); border-color: var(--accent-2); }
