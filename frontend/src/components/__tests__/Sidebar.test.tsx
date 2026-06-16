@@ -23,8 +23,8 @@ describe('Sidebar', () => {
   it('renders trending, top builders and activity from props', () => {
     render(<MemoryRouter><Sidebar trending={trending} builders={builders} activity={activity} /></MemoryRouter>);
     expect(screen.getByText('Trending')).toBeInTheDocument();
-    expect(screen.getByText('Top Builders')).toBeInTheDocument();
-    expect(screen.getByText('Live Activity')).toBeInTheDocument();
+    expect(screen.getByText('Leaderboard')).toBeInTheDocument();
+    expect(screen.getByText('Live ticker')).toBeInTheDocument();
     expect(screen.getByText('EchoFlow')).toBeInTheDocument();
     expect(screen.getByText('HabitLoop')).toBeInTheDocument();
     expect(screen.getByText(/boosted/i)).toBeInTheDocument();

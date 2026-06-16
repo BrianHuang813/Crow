@@ -1,0 +1,51 @@
+/* Lifecycle system
+   A project's alive / dying / dead state is felt, not just labeled.
+   Apply `.life life--{status}` to any element that represents a project
+   (cards, panels, list rows) — it drives saturation, motion, and texture
+   consistently wherever that project appears.
+
+   Grain overlay uses fractal noise; motion is gated behind
+   prefers-reduced-motion so it never fights accessibility. */
+
+.life {
+  position: relative;
+  transition: filter 400ms ease;
+}
+
+/* Shared grain plate for decaying states. */
+.life--dying::after,
+.life--dead::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+/* alive — full color, calm. The vivid baseline everything else decays from. */
+
+/* dying — desaturated + warm shift, light grain, a nervous flicker. */
+.life--dying {
+  filter: saturate(0.62) sepia(0.06);
+}
+.life--dying::after { opacity: 0.06; }
+
+/* dead / fossil — grayscale, frozen, heavy grain. */
+.life--dead {
+  filter: grayscale(0.86) saturate(0.35) brightness(0.99);
+}
+.life--dead::after { opacity: 0.14; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Only decay animates — alive stays still so a feed of live projects
+     reads calm, and hover effects aren't clobbered. */
+  @keyframes life-flicker {
+    0%, 90%, 100% { opacity: 1; }
+    92%           { opacity: 0.78; }
+    94%           { opacity: 1; }
+    96%           { opacity: 0.85; }
+  }
+  .life--dying { animation: life-flicker 4s steps(1, end) infinite; }
+}

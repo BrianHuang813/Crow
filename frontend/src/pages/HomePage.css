@@ -14,21 +14,53 @@
 }
 
 .home__hero {
-  padding: clamp(28px, 5vw, 48px);
+  position: relative;
+  overflow: hidden;
+  padding: clamp(30px, 5vw, 56px) clamp(28px, 5vw, 56px) clamp(40px, 6vw, 72px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background:
-    radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 34%),
+    radial-gradient(circle at 88% -10%, color-mix(in srgb, var(--accent-2) 18%, transparent), transparent 42%),
     var(--surface);
   box-shadow: var(--shadow-card);
 }
 
+/* Copy is pinned left and narrow, leaving deliberate empty space to the
+   right — asymmetry instead of a centered block. */
+.home__hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 70%;
+}
+
 .home__hero h1 {
-  max-width: 720px;
   margin-top: 10px;
-  font-size: clamp(38px, 6vw, 58px);
-  line-height: 1.04;
-  letter-spacing: -0.05em;
+  /* Oversized so it optically bleeds past its column. */
+  font-size: clamp(40px, 7.5vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+/* Tilted swatch cluster anchored bottom-right — the Grid leaking in. */
+.home__hero-swatches {
+  position: absolute;
+  right: clamp(-18px, -1vw, 0px);
+  bottom: -22px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  transform: rotate(-12deg);
+  opacity: 0.9;
+}
+.home__hero-swatches span {
+  width: clamp(26px, 3.4vw, 46px);
+  aspect-ratio: 1;
+  border-radius: 7px;
+  box-shadow: 0 6px 16px rgba(172, 53, 9, 0.12);
+}
+@media (max-width: 640px) {
+  .home__hero-copy { max-width: 100%; }
+  .home__hero-swatches { display: none; }
 }
 
 .home__hero > p:last-of-type {
@@ -83,7 +115,19 @@
 .home__project-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 22px;
+  align-items: start;
+}
+
+/* The newest project opens the feed full-width as a featured card. */
+.home__project-list > .project-card--featured {
+  grid-column: 1 / -1;
+}
+
+/* Broken baseline: the right column drops, so cards never line up in a
+   rigid matrix. margin-top (not transform) so motion's inline transforms win. */
+.home__project-list > *:nth-child(even):not(.project-card--featured) {
+  margin-top: 34px;
 }
 
 @media (max-width: 920px) {

@@ -34,8 +34,14 @@ export default function GridPage() {
     setHoverPos({ x: clientX - wrapperRect.left, y: clientY - wrapperRect.top });
   }, [cellMap]);
 
+  const cells = snapshot?.cells ?? [];
+  const liveCount = cells.filter(c => c.state === 'alive' || c.state === 'dying').length;
+  const fossilCount = cells.filter(c => c.state === 'fossil').length;
+  const claimedPct = Math.round((liveCount / 3600) * 100);
+
   return (
-    <main className="grid-page page-container">
+    <main className="grid-page">
+     <div className="grid-page__inner page-container">
       <section className="grid-page__intro">
         <div>
           <p className="eyebrow">Live territory</p>
@@ -44,6 +50,14 @@ export default function GridPage() {
         </div>
         <Link to="/explore" className="btn btn--outline">Explore projects</Link>
       </section>
+
+      {!isLoading && !isError && (
+        <div className="grid-hud" aria-label="Grid statistics">
+          <span className="grid-hud__stat"><b className="tabular">{liveCount}</b> live cells</span>
+          <span className="grid-hud__stat"><b className="tabular">{claimedPct}%</b> claimed</span>
+          <span className="grid-hud__stat"><b className="tabular">{fossilCount}</b> fossils</span>
+        </div>
+      )}
 
       <div className="grid-page__layout">
         <section className="grid-page__stage" aria-label="Project grid">
@@ -63,6 +77,7 @@ export default function GridPage() {
         </section>
         {isLoggedIn && <ProjectPanel />}
       </div>
+     </div>
     </main>
   );
 }

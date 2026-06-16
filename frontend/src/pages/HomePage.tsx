@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Grid2x2, Radio, TrendingUp } from 'lucide-react';
 import { ProjectCard } from '../components/ProjectCard';
+import { SkeletonGrid } from '../components/SkeletonCard';
 import { Sidebar } from '../components/Sidebar';
 import { useProjects } from '../hooks/useProjects';
 import { useActivity } from '../hooks/useActivity';
@@ -17,11 +18,18 @@ export default function HomePage() {
       <div className="home__layout">
         <div className="home__feed">
           <section className="home__hero">
-            <p className="eyebrow">Crow / Claude</p>
-            <h1>SUBMIT UR PROJECT NOW!</h1>
-            <div className="home__hero-actions">
-              <Link to="/explore" className="btn btn--primary"><TrendingUp size={18} /> Explore projects</Link>
-              <Link to="/grid" className="btn btn--outline"><Grid2x2 size={18} /> View the Grid</Link>
+            <div className="home__hero-copy">
+              <p className="eyebrow">Crow / Claude</p>
+              <h1>SUBMIT UR PROJECT NOW!</h1>
+              <div className="home__hero-actions">
+                <Link to="/explore" className="btn btn--primary"><TrendingUp size={18} /> Explore projects</Link>
+                <Link to="/grid" className="btn btn--outline"><Grid2x2 size={18} /> View the Grid</Link>
+              </div>
+            </div>
+            <div className="home__hero-swatches" aria-hidden>
+              {['var(--accent)', 'var(--alive)', 'var(--accent-2)', 'var(--dying)', 'var(--accent)', 'var(--dead)'].map((c, i) => (
+                <span key={i} style={{ background: c }} />
+              ))}
             </div>
           </section>
 
@@ -34,13 +42,15 @@ export default function HomePage() {
               <Link to="/explore">View all <ArrowRight size={16} /></Link>
             </div>
 
-            {isLoading && <div className="page-message">Loading projects...</div>}
-            {isError && <div className="page-message page-message--error">Projects are unavailable right now.</div>}
+            {isError && <div className="page-message page-message--error">Projects are unavailable right now. Retrying shortly.</div>}
             {!isLoading && !isError && (recent?.items.length ?? 0) === 0 && (
-              <div className="page-message">No projects are on the Grid yet.</div>
+              <div className="page-message">The Grid is empty. Be the first to claim territory.</div>
             )}
             <div className="home__project-list">
-              {(recent?.items ?? []).map(project => <ProjectCard key={project.id} project={project} />)}
+              {isLoading && <SkeletonGrid count={4} />}
+              {(recent?.items ?? []).map((project, i) => (
+                <ProjectCard key={project.id} project={project} index={i} featured={i === 0} />
+              ))}
             </div>
           </section>
         </div>

@@ -25,19 +25,26 @@ export function pixelToCell(
 }
 
 export function getCellColor(cell: GridCell): string {
-  if (cell.state === 'empty') return '#f1ece9';
-  if (cell.state === 'fossil') return '#d4ccc7';
+  if (cell.state === 'empty') return '#241a17';   // arena void
+  if (cell.state === 'fossil') return '#3a2c26';  // etched stone
   return cell.color ?? '#888888';
 }
 
 function drawGrid(ctx: CanvasRenderingContext2D, cells: GridCell[]): void {
-  ctx.fillStyle = '#e7dfdb'; // gap lines read as a soft warm grid
+  ctx.fillStyle = '#120c0a'; // arena gap lines — cells read as lit territory
   ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
   for (const cell of cells) {
     const { px, py } = cellToPixel(cell.x, cell.y);
+    const live = cell.state === 'alive' || cell.state === 'dying';
     ctx.globalAlpha = cell.state === 'dying' ? 0.5 : 1;
     ctx.fillStyle = getCellColor(cell);
+    // Claimed, living cells glow by their owner's color.
+    if (live) {
+      ctx.shadowColor = getCellColor(cell);
+      ctx.shadowBlur = cell.state === 'dying' ? 2 : 5;
+    }
     ctx.fillRect(px, py, CELL_SIZE, CELL_SIZE);
+    ctx.shadowBlur = 0;
   }
   ctx.globalAlpha = 1;
 }

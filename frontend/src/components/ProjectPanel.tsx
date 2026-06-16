@@ -25,7 +25,7 @@ export function ProjectPanel() {
   return (
     <aside className="project-panel">
       <div
-        className={`panel-card panel-card--${project.status}`}
+        className={`panel-card panel-card--${project.status} life life--${project.status}`}
         style={{ '--project-color': project.color } as React.CSSProperties}
       >
           <header className="panel-card__header">

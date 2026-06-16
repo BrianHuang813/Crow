@@ -1,9 +1,20 @@
+/* The Grid is its own world — a full-bleed dark arena. */
 .grid-page {
   padding-block: 48px;
+  background:
+    radial-gradient(circle at 30% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%),
+    var(--arena-bg);
+  color: var(--arena-text);
 }
 
+.grid-page__inner {
+  /* page-container already constrains width + gutter */
+}
+
+.grid-page .eyebrow { color: var(--accent-2); }
+
 .grid-page__intro {
-  margin-bottom: 28px;
+  margin-bottom: 20px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -18,7 +29,35 @@
 
 .grid-page__intro p:last-child {
   margin-top: 10px;
-  color: var(--text-muted);
+  color: var(--arena-text-muted);
+}
+
+/* Pixel HUD — the machine reporting the state of the board. */
+.grid-hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-bottom: 24px;
+  padding: 12px 18px;
+  border: 1px solid var(--arena-line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--arena-surface) 70%, transparent);
+}
+.grid-hud__stat {
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  color: var(--arena-text-muted);
+}
+.grid-hud__stat b { color: var(--accent-2); font-weight: 400; }
+
+/* The danger button reads on the dark surface. */
+.grid-page .btn--outline {
+  color: var(--arena-text);
+  border-color: var(--arena-line);
+}
+.grid-page .btn--outline:hover:not(:disabled) {
+  background: var(--arena-surface);
 }
 
 .grid-page__layout {
@@ -37,6 +76,15 @@
 .grid-page .grid-outer {
   display: block;
   width: max-content;
+  background: var(--arena-surface);
+  border-color: var(--arena-line);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+.grid-page .page-message {
+  background: var(--arena-surface);
+  border-color: var(--arena-line);
+  color: var(--arena-text-muted);
 }
 
 @media (max-width: 1050px) {

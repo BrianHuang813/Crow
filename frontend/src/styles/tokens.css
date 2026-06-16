@@ -1,31 +1,39 @@
 :root {
-  /* Surfaces */
+  /* Surfaces — gallery climate (light), unified warm gray family */
   --bg: #fcf8f9;
   --surface: #ffffff;
-  --surface-2: #f0edee;
-  --surface-well: #f6f3f4;
-  --surface-high: #eae7e8;
-  --border: #e5e1da;
+  --surface-2: #f1edec;
+  --surface-well: #f6f2f1;
+  --surface-high: #eae5e3;
+  --border: #e7ddd8;        /* warm border, replaces cool/warm mix */
   --outline: #8d7169;
   --outline-variant: #e0bfb6;
+
+  /* Surfaces — arena climate (dark, warm near-black) */
+  --arena-bg: #1a1210;
+  --arena-surface: #241a17;
+  --arena-line: #3a2a24;
+  --arena-text: #f3e9e5;
+  --arena-text-muted: #b59b91;
 
   /* Text */
   --text: #1b1b1c;
   --text-muted: #59413a;
 
-  /* Brand */
+  /* Brand — single CTA accent */
   --accent: #ac3509;        /* deep orange — CTA / brand */
   --accent-2: #ff7043;      /* coral — hover / highlight */
   --on-accent: #ffffff;
 
-  /* Secondary / status */
-  --mint: #006a63;          /* alive / growth */
-  --alive: #006a63;
-  --dying: #ff7043;         /* faded orange */
+  /* Lifecycle — the system signal, warmed into one family */
+  --mint: #1f8a7d;          /* legacy alias for alive */
+  --alive: #1f8a7d;
+  --dying: #e0742f;
   --dead: #b8b0ad;          /* fossil light grey */
   --error: #ba1a1a;
 
   /* Type */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-pixel: 'VT323', monospace;
 
@@ -33,9 +41,9 @@
   --radius: 16px;
   --radius-pill: 9999px;
 
-  /* Elevation */
-  --shadow-card: 0 8px 30px rgba(27, 27, 28, 0.045);
-  --shadow-card-hover: 0 14px 38px rgba(27, 27, 28, 0.09);
+  /* Elevation — shadows tinted with the brand hue, not neutral black */
+  --shadow-card: 0 8px 30px rgba(172, 53, 9, 0.06);
+  --shadow-card-hover: 0 14px 38px rgba(172, 53, 9, 0.11);
 
   /* Layout */
   --container-max: 1280px;

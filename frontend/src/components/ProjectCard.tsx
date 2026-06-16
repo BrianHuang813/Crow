@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Clock, Grid2x2, TrendingUp } from 'lucide-react';
+import { motion } from 'motion/react';
 import type { Project } from '../types/api';
 import { formatTimeLeft } from '../utils/time';
 import { ProjectArtwork } from './ProjectArtwork';
@@ -8,11 +9,19 @@ import './ProjectCard.css';
 interface Props {
   project: Project;
   featured?: boolean;
+  index?: number;
 }
 
-export function ProjectCard({ project, featured = false }: Props) {
+export function ProjectCard({ project, featured = false, index = 0 }: Props) {
   return (
-    <article className={`project-card${featured ? ' project-card--featured' : ''}`}>
+    <motion.article
+      className={`project-card life life--${project.status}${featured ? ' project-card--featured' : ''}`}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 320, damping: 30, delay: Math.min(index, 8) * 0.04 }}
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.99 }}
+    >
       <Link to={`/p/${project.id}`} aria-label={`View ${project.name}`}>
         <ProjectArtwork project={project} className="project-card__artwork" />
       </Link>
@@ -41,6 +50,6 @@ export function ProjectCard({ project, featured = false }: Props) {
           <span><Grid2x2 size={15} /> {project.territory_size} cells</span>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }

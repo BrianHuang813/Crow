@@ -13,13 +13,71 @@
 .side-panel__title svg { color: var(--accent); }
 .side-row {
   display: flex; align-items: center; gap: 10px;
-  padding: 8px 0; text-decoration: none; color: var(--text);
+  padding: 8px 10px; margin-inline: -10px; border-radius: 9px;
+  text-decoration: none; color: var(--text);
+  transition: background 160ms ease, transform 160ms ease;
 }
-.side-row + .side-row { border-top: 1px solid var(--border); }
+.side-row + .side-row { box-shadow: 0 -1px 0 var(--border); }
+.side-row:hover { background: var(--surface-well); transform: translateX(2px); }
 .side-row__swatch { width: 10px; height: 10px; border-radius: 3px; flex: none; }
 .side-row__name { font-weight: 600; font-size: 14px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.side-row__metric { font-size: 13px; font-weight: 700; color: var(--mint); }
+.side-row__metric {
+  font-family: var(--font-pixel); font-size: 17px; line-height: 1;
+  font-variant-numeric: tabular-nums; color: var(--accent);
+}
 .side-empty { color: var(--text-muted); font-size: 13px; }
+
+/* Leaderboard rank chips — pixel voice. */
+.side-row__rank {
+  flex: none;
+  width: 20px; text-align: center;
+  font-family: var(--font-pixel); font-size: 17px; line-height: 1;
+  color: var(--text-muted);
+}
+.side-row__rank--1 { color: #c8881c; }   /* gold */
+.side-row__rank--2 { color: #8d8d8d; }   /* silver */
+.side-row__rank--3 { color: #a9612e; }   /* bronze */
+
+/* Surge badge — momentum spike. */
+.surge-badge {
+  flex: none;
+  display: inline-flex; align-items: center;
+  padding: 2px 4px; border-radius: 4px;
+  color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, white);
+}
+
+/* Leaderboard rows carry an animated territory bar. */
+.side-row--bar { align-items: stretch; }
+.side-row__bar-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.side-row__bar-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.side-row__bar-head .side-row__metric { color: var(--text); }
+.terr-bar {
+  height: 6px; border-radius: 3px;
+  background: var(--surface-2); overflow: hidden;
+}
+.terr-bar__fill {
+  display: block; height: 100%;
+  border-radius: 3px;
+  transform-origin: left;
+  animation: terr-grow 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes terr-grow { from { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .terr-bar__fill { animation: none; } }
+
+/* Live ticker rows. */
+.ticker-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 10px; margin-inline: -10px; border-radius: 9px;
+  text-decoration: none; color: var(--text-muted);
+  font-size: 13px; line-height: 1.35;
+  transition: background 160ms ease;
+}
+.ticker-row:hover { background: var(--surface-well); color: var(--text); }
+.ticker-row__dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); }
+.ticker-row--boosted .ticker-row__dot { background: var(--accent); }
+.ticker-row--claimed .ticker-row__dot { background: var(--alive); }
+.ticker-row--faded .ticker-row__dot { background: var(--dying); }
+.ticker-row__text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 @media (max-width: 920px) {
   .sidebar {

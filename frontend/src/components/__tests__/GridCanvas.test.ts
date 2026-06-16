@@ -40,11 +40,11 @@ describe('getCellColor', () => {
     x: 0, y: 0, state, project_id: color ? 'id' : null, color,
   });
 
-  it('returns light well color for empty cells', () => {
-    expect(getCellColor(cell('empty', null))).toBe('#f1ece9');
+  it('returns arena void color for empty cells', () => {
+    expect(getCellColor(cell('empty', null))).toBe('#241a17');
   });
-  it('returns light grey for fossil cells regardless of project color', () => {
-    expect(getCellColor(cell('fossil', '#ac3509'))).toBe('#d4ccc7');
+  it('returns etched stone for fossil cells regardless of project color', () => {
+    expect(getCellColor(cell('fossil', '#ac3509'))).toBe('#3a2c26');
   });
   it('returns project color for alive cells', () => {
     expect(getCellColor(cell('alive', '#ac3509'))).toBe('#ac3509');

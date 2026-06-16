@@ -5,6 +5,7 @@ import { useProjects } from '../hooks/useProjects';
 import type { Project } from '../types/api';
 import type { ListParams } from '../api/social';
 import { ProjectCard } from '../components/ProjectCard';
+import { SkeletonGrid } from '../components/SkeletonCard';
 import './ExplorePage.css';
 
 const PAGE_SIZE = 12;
@@ -96,12 +97,12 @@ export default function ExplorePage() {
         ))}
       </div>
 
-      {isLoading && <PageMessage>Loading projects...</PageMessage>}
-      {isError && <PageMessage>Projects are unavailable right now.</PageMessage>}
-      {!isLoading && !isError && projects.length === 0 && <PageMessage>No projects match these filters.</PageMessage>}
+      {isError && <PageMessage>Projects are unavailable right now. Retrying shortly.</PageMessage>}
+      {!isLoading && !isError && projects.length === 0 && <PageMessage>Nothing matches these filters yet.</PageMessage>}
 
       <section className="explore__grid" aria-label="Projects">
-        {projects.map((project: Project) => <ProjectCard key={project.id} project={project} />)}
+        {isLoading && <SkeletonGrid count={6} />}
+        {projects.map((project: Project, i: number) => <ProjectCard key={project.id} project={project} index={i} />)}
       </section>
 
       {data && limit < data.total && (

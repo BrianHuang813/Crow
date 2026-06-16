@@ -7,25 +7,24 @@
 }
 
 .panel-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--arena-surface);
+  border: 1px solid var(--arena-line);
   border-radius: var(--radius);
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   border-top: 3px solid var(--project-color, var(--accent));
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  color: var(--arena-text);
 }
 
 .panel-card--dying {
   border-top-color: var(--dying);
-  box-shadow: var(--shadow-card);
 }
 
 .panel-card--dead {
   border-top-color: var(--dead);
-  box-shadow: var(--shadow-card);
 }
 
 .panel-card__header {
@@ -37,15 +36,16 @@
 
 .panel-card__name {
   font-family: var(--font-pixel);
-  font-size: 20px;
-  color: var(--text);
+  font-size: 22px;
+  color: var(--arena-text);
   flex: 1;
   word-break: break-word;
 }
 
 .momentum-bar {
-  height: 6px;
-  background: var(--surface-2);
+  height: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--arena-line);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -58,15 +58,17 @@
 }
 
 .panel-card__momentum-label {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--arena-text-muted);
 }
 
 .panel-card__meta {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--arena-text-muted);
 }
 
 .panel-card__meta span {

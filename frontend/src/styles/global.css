@@ -1,7 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=VT323&display=swap');
 @import './tokens.css';
+@import './lifecycle.css';
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+/* Visible keyboard focus everywhere — accessibility, not optional. */
+:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
 
 html, body, #root {
   min-height: 100%;
@@ -11,6 +24,19 @@ html, body, #root {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
 }
+
+/* Headlines speak in the display voice: heavy, tightly tracked. */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+h3 { font-weight: 600; letter-spacing: -0.02em; }
+
+/* Numbers that compete should align. */
+.tabular { font-variant-numeric: tabular-nums; }
 
 .site-shell {
   min-height: 100vh;
@@ -58,6 +84,7 @@ select {
 }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn:hover:not(:disabled) { transform: translateY(-1px); }
+.btn:active:not(:disabled) { transform: translateY(1px) scale(0.985); }
 .btn--primary { background: var(--accent); color: var(--on-accent); }
 .btn--primary:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 88%, black); }
 .btn--secondary { background: color-mix(in srgb, var(--mint) 10%, white); color: var(--mint); border-color: color-mix(in srgb, var(--mint) 25%, white); }
@@ -89,9 +116,9 @@ select {
   padding: 2px 7px;
   border-radius: 999px; font-family: var(--font-pixel); font-size: 14px;
 }
-.badge--alive { background: rgba(46, 204, 113, 0.2); color: var(--alive); }
-.badge--dying { background: rgba(243, 156, 18, 0.2); color: var(--dying); }
-.badge--dead  { background: rgba(127, 140, 141, 0.2); color: var(--dead); }
+.badge--alive { background: color-mix(in srgb, var(--alive) 16%, white); color: var(--alive); }
+.badge--dying { background: color-mix(in srgb, var(--dying) 16%, white); color: var(--dying); }
+.badge--dead  { background: var(--surface-2); color: #706966; }
 
 .error { color: var(--dying); font-size: 12px; margin-top: 4px; }
 
