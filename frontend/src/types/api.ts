@@ -21,6 +21,7 @@ export interface Project {
   name: string;
   description: string | null;
   url: string | null;
+  repo: string | null;
   tech_tags: string[];
   owner_id: string;
   status: ProjectStatus;

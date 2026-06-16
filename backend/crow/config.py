@@ -38,4 +38,9 @@ class Settings(BaseSettings):
     grid_height: int = 60
     grid_cache_ttl_seconds: int = 30
 
+    # crow-submit plugin version gating (overridable via env, no logic redeploy)
+    crow_client_latest: str = "1.1.0"
+    crow_client_min: str = "1.0.0"
+    crow_client_message: str = ""
+
 settings = Settings()

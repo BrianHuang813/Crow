@@ -29,6 +29,7 @@ vi.mock('../../api/projects', () => ({
     owner_id: 'user-1',
     description: null,
     url: null,
+    repo: null,
     created_at: new Date().toISOString(),
     died_at: null,
   } satisfies Project),

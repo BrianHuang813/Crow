@@ -20,7 +20,7 @@ let profile: { data: UserProfile | undefined; isLoading: boolean; isError: boole
 vi.mock('../../hooks/useUserProfile', () => ({ useUserProfile: () => profile }));
 
 const proj: Project = {
-  id: 'p1', name: 'EchoFlow', description: null, url: null, tech_tags: [],
+  id: 'p1', name: 'EchoFlow', description: null, url: null, repo: null, tech_tags: [],
   owner_id: 'u1', status: 'alive', expires_at: '', momentum: 50, territory_size: 24,
   color: '#ac3509', created_at: '', died_at: null,
 };

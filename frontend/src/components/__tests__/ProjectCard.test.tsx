@@ -9,6 +9,7 @@ const project: Project = {
   name: 'EchoFlow',
   description: 'A living knowledge agent.',
   url: 'https://example.com',
+  repo: null,
   tech_tags: ['React'],
   owner_id: 'user-1',
   status: 'alive',

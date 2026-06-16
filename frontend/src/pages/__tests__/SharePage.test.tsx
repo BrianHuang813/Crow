@@ -5,7 +5,7 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import type { Project } from '../../types/api';
 
 const sample: Project = {
-  id: 'p1', name: 'EchoFlow', description: null, url: null,
+  id: 'p1', name: 'EchoFlow', description: null, url: null, repo: null,
   tech_tags: ['React'], owner_id: 'u1', status: 'alive',
   expires_at: new Date(Date.now() + 7200_000).toISOString(),
   momentum: 60, territory_size: 24, color: '#ac3509', created_at: '', died_at: null,

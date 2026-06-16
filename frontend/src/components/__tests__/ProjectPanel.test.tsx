@@ -65,6 +65,7 @@ describe('ProjectPanel — with project', () => {
     name: 'My Live App',
     description: 'Cool stuff',
     url: null,
+    repo: null,
     tech_tags: ['Python'],
     owner_id: 'u-1',
     status: 'alive',

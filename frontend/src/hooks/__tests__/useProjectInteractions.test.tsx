@@ -9,7 +9,7 @@ vi.mock('../useAuth', () => ({ useAuth: () => authValue }));
 
 function project(over: Partial<Project> = {}): Project {
   return {
-    id: 'p1', name: 'X', description: null, url: null, tech_tags: [],
+    id: 'p1', name: 'X', description: null, url: null, repo: null, tech_tags: [],
     owner_id: 'other', status: 'alive', expires_at: '', momentum: 50,
     territory_size: 3, color: '#ac3509', created_at: '', died_at: null, ...over,
   };

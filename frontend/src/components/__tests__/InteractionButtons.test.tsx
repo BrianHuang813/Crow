@@ -31,6 +31,7 @@ const mockProject: Project = {
   owner_id: 'other-user-uuid',  // different from userId 'clicker-uuid' → buttons shown
   description: null,
   url: null,
+  repo: null,
   created_at: new Date().toISOString(),
   died_at: null,
 };
@@ -48,6 +49,7 @@ vi.mock('../../api/projects', () => ({
     owner_id: 'other-user-uuid',
     description: null,
     url: null,
+    repo: null,
     created_at: new Date().toISOString(),
     died_at: null,
   }),

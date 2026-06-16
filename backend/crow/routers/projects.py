@@ -56,6 +56,7 @@ async def create_project(
         name=body.name,
         description=body.description,
         url=body.url,
+        repo=body.repo,
         tech_tags=body.tech_tags,
         owner_id=user.id,
         expires_at=datetime.now(timezone.utc) + timedelta(hours=settings.initial_lifespan_hours),

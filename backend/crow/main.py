@@ -12,6 +12,7 @@ from .routers import (
     og as og_router,
     users as users_router,
     activity as activity_router,
+    client as client_router,
 )
 
 @asynccontextmanager
@@ -37,3 +38,4 @@ app.include_router(users_router.router, prefix="/api")
 app.include_router(activity_router.router, prefix="/api")
 app.include_router(interact_router.router, prefix="/api")
 app.include_router(og_router.router, prefix="/api")
+app.include_router(client_router.router, prefix="/api")

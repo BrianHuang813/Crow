@@ -12,6 +12,7 @@ class Project(Base):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str | None] = mapped_column(String, nullable=True)
     url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    repo: Mapped[str | None] = mapped_column(String(500), nullable=True)
     tech_tags: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=False, server_default="{}")
     owner_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="alive")

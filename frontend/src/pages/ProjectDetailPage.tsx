@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, ArrowRight, Clock, TrendingUp, Grid2x2, ExternalLink, Share2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Clock, TrendingUp, Grid2x2, ExternalLink, Share2, Github } from 'lucide-react';
 import { fetchProject } from '../api/projects';
 import { useAuth } from '../hooks/useAuth';
 import { useRelated } from '../hooks/useRelated';
@@ -75,6 +75,12 @@ export default function ProjectDetailPage() {
             {project.url && (
               <a href={project.url} target="_blank" rel="noopener noreferrer">
                 <span><ExternalLink size={18} /> Open Project</span>
+                <ArrowRight size={18} />
+              </a>
+            )}
+            {project.repo && (
+              <a href={project.repo} target="_blank" rel="noopener noreferrer">
+                <span><Github size={18} /> View source</span>
                 <ArrowRight size={18} />
               </a>
             )}

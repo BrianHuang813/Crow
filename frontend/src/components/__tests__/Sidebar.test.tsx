@@ -7,7 +7,7 @@ import type { ActivityEventApi } from '../../api/social';
 
 function project(over: Partial<Project>): Project {
   return {
-    id: 'a', name: 'EchoFlow', description: null, url: null, tech_tags: [],
+    id: 'a', name: 'EchoFlow', description: null, url: null, repo: null, tech_tags: [],
     owner_id: 'u1', status: 'alive', expires_at: '', momentum: 80,
     territory_size: 30, color: '#ac3509', created_at: '', died_at: null, ...over,
   };

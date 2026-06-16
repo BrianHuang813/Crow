@@ -7,6 +7,7 @@ class ProjectCreate(BaseModel):
     name: str
     description: str | None = None
     url: str | None = None
+    repo: str | None = None
     tech_tags: list[str] = []
 
 
@@ -15,6 +16,7 @@ class ProjectOut(BaseModel):
     name: str
     description: str | None
     url: str | None
+    repo: str | None
     tech_tags: list[str]
     owner_id: uuid.UUID
     status: str

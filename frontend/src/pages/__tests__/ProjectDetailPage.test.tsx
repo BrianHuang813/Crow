@@ -5,7 +5,7 @@ import type { Project } from '../../types/api';
 
 const sample: Project = {
   id: 'p1', name: 'EchoFlow', description: 'A living knowledge agent.',
-  url: 'https://echo.dev', tech_tags: ['React', 'GPT-4'], owner_id: 'me',
+  url: 'https://echo.dev', repo: null, tech_tags: ['React', 'GPT-4'], owner_id: 'me',
   status: 'alive', expires_at: new Date(Date.now() + 7200_000).toISOString(),
   momentum: 72, territory_size: 18, color: '#ac3509', created_at: '', died_at: null,
 };
