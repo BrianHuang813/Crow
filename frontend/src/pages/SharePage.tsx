@@ -2,10 +2,12 @@ import { useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { toPng } from 'html-to-image';
-import { ArrowLeft, Download, Link2 } from 'lucide-react';
+import { ArrowLeft, Download, Link2, Check, Twitter, Facebook, Send, Share2, Swords } from 'lucide-react';
 import { fetchProject } from '../api/projects';
 import { ShareCard, type ShareBackground } from '../components/ShareCard';
 import './SharePage.css';
+
+const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 
 const BACKGROUNDS: { key: ShareBackground; color: string }[] = [
   { key: 'cream', color: '#fcf8f9' },
@@ -43,8 +45,29 @@ export default function SharePage() {
     }
   }
 
+  const shareUrl = `${window.location.origin}/p/${project.id}`;
+  const shareText = `Help me claim the Grid — back "${project.name}" on Crow and let's fight for territory.`;
+
+  const socialLinks = {
+    x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+    telegram: `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`,
+  };
+
+  function openShare(url: string) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  async function handleNativeShare() {
+    try {
+      await navigator.share({ title: `${project!.name} on Crow`, text: shareText, url: shareUrl });
+    } catch {
+      // User dismissed the share sheet; nothing to do.
+    }
+  }
+
   async function handleCopy() {
-    await navigator.clipboard.writeText(window.location.href);
+    await navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -64,8 +87,40 @@ export default function SharePage() {
           <ShareCard ref={cardRef} project={project} background={background} showTech={showTech} showStats={showStats} />
         </div>
 
-        <aside className="share__panel">
-          <h2 className="share__panel-title">Customize Card</h2>
+        <aside className="share__side">
+         <section className="share__panel share__rally">
+          <h2 className="share__panel-title"><Swords size={20} /> Rally your friends</h2>
+          <p className="share__panel-copy">
+            Pull friends onto the Grid to back your project — every click adds momentum and helps you claim territory before it fades.
+          </p>
+
+          <blockquote className="share__rally-msg">{shareText}</blockquote>
+
+          {canNativeShare && (
+            <button className="btn btn--primary share__share-btn" onClick={handleNativeShare}>
+              <Share2 size={16} /> Share with friends
+            </button>
+          )}
+
+          <div className="share__social" role="group" aria-label="Share to social platforms">
+            <button className="share__social-btn share__social-btn--x" onClick={() => openShare(socialLinks.x)} aria-label="Share on X">
+              <Twitter size={18} />
+            </button>
+            <button className="share__social-btn share__social-btn--fb" onClick={() => openShare(socialLinks.facebook)} aria-label="Share on Facebook">
+              <Facebook size={18} />
+            </button>
+            <button className="share__social-btn share__social-btn--tg" onClick={() => openShare(socialLinks.telegram)} aria-label="Share on Telegram">
+              <Send size={18} />
+            </button>
+            <button className="share__social-btn" onClick={handleCopy} aria-label="Copy link">
+              {copied ? <Check size={18} /> : <Link2 size={18} />}
+            </button>
+          </div>
+          {copied && <p className="share__copied">Link copied — paste it anywhere.</p>}
+         </section>
+
+         <section className="share__panel">
+          <h2 className="share__panel-title">Customize card</h2>
           <p className="share__panel-copy">Choose what appears in the downloadable Project card.</p>
 
           <div className="share__group">
@@ -99,10 +154,8 @@ export default function SharePage() {
             <button className="btn btn--primary" onClick={handleDownload}>
               <Download size={15} /> Download high-res card
             </button>
-            <button className="btn btn--secondary" onClick={handleCopy}>
-              <Link2 size={15} /> {copied ? 'Copied!' : 'Copy link'}
-            </button>
           </div>
+         </section>
         </aside>
       </div>
     </main>

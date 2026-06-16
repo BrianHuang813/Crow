@@ -60,9 +60,15 @@
   font-weight: 700;
 }
 
-.share__panel {
+.share__side {
   position: sticky;
   top: 92px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.share__panel {
   padding: 24px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -70,8 +76,65 @@
   box-shadow: var(--shadow-card);
 }
 
+/* Rally block is the primary action — give it a warm, charged surface. */
+.share__rally {
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 50%),
+    var(--surface);
+  border-color: color-mix(in srgb, var(--accent) 22%, var(--border));
+}
+
 .share__panel-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
   font-size: 21px;
+}
+.share__panel-title svg { color: var(--accent); }
+
+.share__rally-msg {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: var(--surface-well);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.share__share-btn { width: 100%; }
+
+.share__social {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.share__social-btn {
+  flex: 1;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: transform 150ms ease, background 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+.share__social-btn:hover { transform: translateY(-2px); color: var(--text); }
+.share__social-btn:active { transform: translateY(0) scale(0.97); }
+.share__social-btn--x:hover { background: #1b1b1c; color: #fff; border-color: #1b1b1c; }
+.share__social-btn--fb:hover { background: #1877f2; color: #fff; border-color: #1877f2; }
+.share__social-btn--tg:hover { background: #229ed9; color: #fff; border-color: #229ed9; }
+
+.share__copied {
+  margin-top: 10px;
+  color: var(--alive);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .share__panel-copy {
@@ -130,7 +193,7 @@
 
 @media (max-width: 900px) {
   .share__grid { grid-template-columns: 1fr; }
-  .share__panel { position: static; }
+  .share__side { position: static; }
 }
 
 @media (max-width: 560px) {

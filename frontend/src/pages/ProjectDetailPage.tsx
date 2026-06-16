@@ -79,7 +79,7 @@ export default function ProjectDetailPage() {
               </a>
             )}
             <Link to={`/share/${project.id}`}>
-              <span><Share2 size={18} /> Share Project</span>
+              <span><Share2 size={18} /> Share &amp; rally friends</span>
               <ArrowRight size={18} />
             </Link>
           </div>
