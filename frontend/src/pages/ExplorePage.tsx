@@ -2,11 +2,15 @@ import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { useProjects } from '../hooks/useProjects';
+import { useUserSearch } from '../hooks/useUserSearch';
 import type { Project } from '../types/api';
 import type { ListParams } from '../api/social';
 import { ProjectCard } from '../components/ProjectCard';
+import { UserResultCard } from '../components/UserResultCard';
 import { SkeletonGrid } from '../components/SkeletonCard';
 import './ExplorePage.css';
+
+type ExploreTab = 'projects' | 'users';
 
 const PAGE_SIZE = 12;
 
@@ -19,10 +23,13 @@ const SORTS: { label: string; value: NonNullable<ListParams['sort']> }[] = [
 export default function ExplorePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [limit, setLimit] = useState(PAGE_SIZE);
+  const tab: ExploreTab = searchParams.get('type') === 'users' ? 'users' : 'projects';
   const sort = (searchParams.get('sort') as ListParams['sort']) ?? 'momentum';
   const tag = searchParams.get('tag') ?? undefined;
-  const query = searchParams.get('q')?.trim().toLowerCase() ?? '';
+  const rawQuery = searchParams.get('q')?.trim() ?? '';
+  const query = rawQuery.toLowerCase();
   const { data, isLoading, isError } = useProjects({ status: 'all', sort, tag, limit });
+  const userSearch = useUserSearch(tab === 'users' ? rawQuery : '');
 
   const projects = useMemo(() => {
     const items = data?.items ?? [];
@@ -44,8 +51,12 @@ export default function ExplorePage() {
     return [...counts].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([name]) => name);
   }, [data?.items]);
 
-  function updateParams(next: { sort?: string; tag?: string | null; q?: string }) {
+  function updateParams(next: { sort?: string; tag?: string | null; q?: string; type?: ExploreTab }) {
     const params = new URLSearchParams(searchParams);
+    if (next.type) {
+      if (next.type === 'users') params.set('type', 'users');
+      else params.delete('type');
+    }
     if (next.sort) params.set('sort', next.sort);
     if (next.tag === null) params.delete('tag');
     else if (next.tag) params.set('tag', next.tag);
@@ -65,50 +76,77 @@ export default function ExplorePage() {
           <h1>Explore the Grid</h1>
           <p>Discover active projects, compare momentum, and find builders competing for territory.</p>
         </div>
-        <div className="segmented-control" aria-label="Project sorting">
-          {SORTS.map(option => (
-            <button
-              key={option.value}
-              className={sort === option.value ? 'is-active' : ''}
-              onClick={() => updateParams({ sort: option.value })}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
+        {tab === 'projects' && (
+          <div className="segmented-control" aria-label="Project sorting">
+            {SORTS.map(option => (
+              <button
+                key={option.value}
+                className={sort === option.value ? 'is-active' : ''}
+                onClick={() => updateParams({ sort: option.value })}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        )}
       </section>
+
+      <div className="segmented-control explore__tabs" aria-label="Search type">
+        <button className={tab === 'projects' ? 'is-active' : ''} onClick={() => updateParams({ type: 'projects' })}>
+          Projects
+        </button>
+        <button className={tab === 'users' ? 'is-active' : ''} onClick={() => updateParams({ type: 'users' })}>
+          Builders
+        </button>
+      </div>
 
       <div className="explore__search">
         <Search size={18} />
         <input
           value={searchParams.get('q') ?? ''}
           onChange={event => updateParams({ q: event.target.value })}
-          placeholder="Search project names, descriptions, or tech..."
-          aria-label="Filter projects"
+          placeholder={tab === 'users' ? 'Search builders by handle…' : 'Search project names, descriptions, or tech...'}
+          aria-label={tab === 'users' ? 'Search builders' : 'Filter projects'}
         />
       </div>
 
-      <div className="explore__tags" aria-label="Technology filters">
-        <button className={!tag ? 'is-active' : ''} onClick={() => updateParams({ tag: null })}>All technologies</button>
-        {tags.map(item => (
-          <button key={item} className={tag === item ? 'is-active' : ''} onClick={() => updateParams({ tag: item })}>
-            {item}
-          </button>
-        ))}
-      </div>
+      {tab === 'projects' ? (
+        <>
+          <div className="explore__tags" aria-label="Technology filters">
+            <button className={!tag ? 'is-active' : ''} onClick={() => updateParams({ tag: null })}>All technologies</button>
+            {tags.map(item => (
+              <button key={item} className={tag === item ? 'is-active' : ''} onClick={() => updateParams({ tag: item })}>
+                {item}
+              </button>
+            ))}
+          </div>
 
-      {isError && <PageMessage>Projects are unavailable right now. Retrying shortly.</PageMessage>}
-      {!isLoading && !isError && projects.length === 0 && <PageMessage>Nothing matches these filters yet.</PageMessage>}
+          {isError && <PageMessage>Projects are unavailable right now. Retrying shortly.</PageMessage>}
+          {!isLoading && !isError && projects.length === 0 && <PageMessage>Nothing matches these filters yet.</PageMessage>}
 
-      <section className="explore__grid" aria-label="Projects">
-        {isLoading && <SkeletonGrid count={6} />}
-        {projects.map((project: Project, i: number) => <ProjectCard key={project.id} project={project} index={i} />)}
-      </section>
+          <section className="explore__grid" aria-label="Projects">
+            {isLoading && <SkeletonGrid count={6} />}
+            {projects.map((project: Project, i: number) => <ProjectCard key={project.id} project={project} index={i} />)}
+          </section>
 
-      {data && limit < data.total && (
-        <button className="btn btn--outline explore__more" onClick={() => setLimit(current => current + PAGE_SIZE)}>
-          Load more projects
-        </button>
+          {data && limit < data.total && (
+            <button className="btn btn--outline explore__more" onClick={() => setLimit(current => current + PAGE_SIZE)}>
+              Load more projects
+            </button>
+          )}
+        </>
+      ) : (
+        <>
+          {!rawQuery && <PageMessage>Type a handle to find builders.</PageMessage>}
+          {rawQuery && userSearch.isError && <PageMessage>Search is unavailable right now. Retrying shortly.</PageMessage>}
+          {rawQuery && !userSearch.isLoading && !userSearch.isError && (userSearch.data?.items.length ?? 0) === 0 && (
+            <PageMessage>No builders match “{rawQuery}”.</PageMessage>
+          )}
+          <section className="explore__users" aria-label="Builders">
+            {rawQuery && userSearch.isLoading && <PageMessage>Searching…</PageMessage>}
+            {userSearch.data?.items.map(user => <UserResultCard key={user.handle} user={user} />)}
+          </section>
+        </>
       )}
     </main>
   );

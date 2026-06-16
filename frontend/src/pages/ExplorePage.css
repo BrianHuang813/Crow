@@ -24,9 +24,13 @@
   line-height: 1.55;
 }
 
+.explore__tabs {
+  margin-top: 32px;
+}
+
 .explore__search {
   max-width: 620px;
-  margin-top: 36px;
+  margin-top: 20px;
   padding: 12px 16px;
   display: flex;
   align-items: center;
@@ -84,6 +88,72 @@
 .explore__more {
   display: block;
   margin: 28px auto 0;
+}
+
+.explore__users {
+  margin-top: 32px;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-result {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 16px);
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease;
+}
+
+.user-result:hover {
+  border-color: var(--accent);
+}
+
+.user-result__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--accent) 12%, white);
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.user-result__identity {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-result__handle {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.user-result__stats {
+  display: flex;
+  gap: 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.user-result__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media (max-width: 520px) {
+  .user-result__stats { gap: 12px; }
 }
 
 @media (max-width: 760px) {

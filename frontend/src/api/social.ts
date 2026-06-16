@@ -76,6 +76,25 @@ export function fetchUserProfile(handle: string): Promise<UserProfile> {
   return apiFetch<UserProfile>(`/users/${encodeURIComponent(handle)}`);
 }
 
+export interface UserSearchItem {
+  handle: string;
+  avatar_url: string | null;
+  project_count: number;
+  territory_total: number;
+  follower_count: number;
+}
+
+export interface UserSearchResponse {
+  items: UserSearchItem[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export function searchUsers(params: { q: string; limit?: number; offset?: number }): Promise<UserSearchResponse> {
+  return apiFetch<UserSearchResponse>(`/users/search${qs(params)}`);
+}
+
 export function fetchRelated(id: string, limit = 4): Promise<{ items: Project[] }> {
   return apiFetch<{ items: Project[] }>(`/projects/${id}/related${qs({ limit })}`);
 }

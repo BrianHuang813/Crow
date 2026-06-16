@@ -1,11 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
 from ..database import get_db
 from ..auth import get_current_user, get_optional_user
 from ..models import User, Project, Follow
-from ..schemas.user import UserProfileOut, FollowStateOut
+from ..schemas.user import (
+    UserProfileOut,
+    FollowStateOut,
+    UserSearchItemOut,
+    UserSearchOut,
+)
 
 router = APIRouter()
 
@@ -14,6 +19,76 @@ async def _follower_count(db: AsyncSession, user_id) -> int:
     return await db.scalar(
         select(func.count()).select_from(Follow).where(Follow.followee_id == user_id)
     ) or 0
+
+
+@router.get("/users/search", response_model=UserSearchOut)
+async def search_users(
+    db: AsyncSession = Depends(get_db),
+    q: str = Query(..., min_length=1),
+    limit: int = Query(20),
+    offset: int = Query(0),
+):
+    if limit < 0 or offset < 0:
+        raise HTTPException(status_code=400, detail="limit/offset must be >= 0")
+    limit = min(limit, 50)
+
+    pattern = f"%{q}%"
+    base = select(User).where(User.handle.ilike(pattern))
+
+    total = await db.scalar(select(func.count()).select_from(base.subquery()))
+
+    users = (
+        await db.execute(base.order_by(User.handle.asc()).limit(limit).offset(offset))
+    ).scalars().all()
+
+    if not users:
+        return UserSearchOut(items=[], total=total or 0, limit=limit, offset=offset)
+
+    user_ids = [u.id for u in users]
+
+    # Aggregate stats in one query each to avoid per-row N+1.
+    project_counts = dict(
+        (
+            await db.execute(
+                select(Project.owner_id, func.count())
+                .where(Project.owner_id.in_(user_ids))
+                .group_by(Project.owner_id)
+            )
+        ).all()
+    )
+    territory_totals = dict(
+        (
+            await db.execute(
+                select(Project.owner_id, func.coalesce(func.sum(Project.territory_size), 0))
+                .where(
+                    Project.owner_id.in_(user_ids),
+                    Project.status.in_(["alive", "dying"]),
+                )
+                .group_by(Project.owner_id)
+            )
+        ).all()
+    )
+    follower_counts = dict(
+        (
+            await db.execute(
+                select(Follow.followee_id, func.count())
+                .where(Follow.followee_id.in_(user_ids))
+                .group_by(Follow.followee_id)
+            )
+        ).all()
+    )
+
+    items = [
+        UserSearchItemOut(
+            handle=u.handle,
+            avatar_url=u.avatar_url,
+            project_count=project_counts.get(u.id, 0),
+            territory_total=territory_totals.get(u.id, 0),
+            follower_count=follower_counts.get(u.id, 0),
+        )
+        for u in users
+    ]
+    return UserSearchOut(items=items, total=total or 0, limit=limit, offset=offset)
 
 
 @router.get("/users/{handle}", response_model=UserProfileOut)

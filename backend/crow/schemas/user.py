@@ -17,3 +17,18 @@ class UserProfileOut(BaseModel):
 class FollowStateOut(BaseModel):
     is_following: bool
     follower_count: int
+
+
+class UserSearchItemOut(BaseModel):
+    handle: str
+    avatar_url: str | None
+    project_count: int
+    territory_total: int
+    follower_count: int
+
+
+class UserSearchOut(BaseModel):
+    items: list[UserSearchItemOut]
+    total: int
+    limit: int
+    offset: int
