@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo-nbg.png" alt="Crow" width="160">
+</p>
+
 # Crow
 
 [繁體中文](README.zh-TW.md)
@@ -79,3 +83,9 @@ Beyond that:
 - **Found a bug or have an idea?** Open an issue on [GitHub](https://github.com/BrianHuang813/Crow/issues).
 - **Want to improve the `crow-submit` plugin?** The skill lives in its own repo, **[BrianHuang813/crow-plugins](https://github.com/BrianHuang813/crow-plugins)** (`plugins/crow-submit/skills/submit/SKILL.md`). Edit it there and open a pull request.
 - **Want to contribute to the platform?** Check open issues for things tagged `good first issue`, or open a discussion about what you'd like to build.
+
+---
+
+## License
+
+Crow is released under the [MIT License](LICENSE).

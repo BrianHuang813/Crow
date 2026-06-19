@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo-nbg.png" alt="Crow" width="160">
+</p>
+
 # Crow
 
 [English](README.md)
@@ -79,3 +83,9 @@ Crow 是開源專案。最好的貢獻方式就是使用這個平台——提交
 - **發現 bug 或有任何想法？** 在 [GitHub](https://github.com/BrianHuang813/Crow/issues) 開一個 issue。
 - **想改善 `crow-submit` 外掛？** 技能檔案放在獨立的 repo **[BrianHuang813/crow-plugins](https://github.com/BrianHuang813/crow-plugins)**（`plugins/crow-submit/skills/submit/SKILL.md`）。在那邊修改後開一個 pull request 即可。
 - **想為平台貢獻程式碼？** 查看標有 `good first issue` 的 issue，或開一個 discussion 聊聊你想做的事。
+
+---
+
+## 授權條款
+
+Crow 採用 [MIT License](LICENSE) 授權。
