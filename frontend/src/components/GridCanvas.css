@@ -1,6 +1,7 @@
 .grid-canvas-wrap {
   position: relative;
-  display: inline-block;
+  display: block;
+  width: 100%;
   border: 1px solid var(--arena-line);
   border-radius: 10px;
   overflow: hidden;
@@ -24,6 +25,8 @@
 
 .grid-canvas {
   display: block;
+  width: 100%;
+  height: auto;
   image-rendering: pixelated;
   cursor: crosshair;
 }

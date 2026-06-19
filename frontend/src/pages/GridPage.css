@@ -69,13 +69,13 @@
 .grid-page__stage {
   min-width: 0;
   flex: 1;
-  overflow-x: auto;
   padding: 4px 4px 16px;
 }
 
 .grid-page .grid-outer {
   display: block;
-  width: max-content;
+  width: 100%;
+  max-width: 780px;
   background: var(--arena-surface);
   border-color: var(--arena-line);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
