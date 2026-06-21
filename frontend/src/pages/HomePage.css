@@ -134,6 +134,13 @@
   .home__layout { grid-template-columns: 1fr; }
 }
 
+.home__hero-sub {
+  margin: 12px 0 20px;
+  max-width: 52ch;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
 @media (max-width: 640px) {
   .home { padding-top: 20px; }
   .home__hero > p:last-of-type { font-size: 16px; }

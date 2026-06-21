@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Grid2x2, Radio, TrendingUp } from 'lucide-react';
+import { ArrowRight, Grid2x2, Radio, Rocket, TrendingUp } from 'lucide-react';
 import { ProjectCard } from '../components/ProjectCard';
 import { SkeletonGrid } from '../components/SkeletonCard';
 import { Sidebar } from '../components/Sidebar';
@@ -19,10 +19,16 @@ export default function HomePage() {
         <div className="home__feed">
           <section className="home__hero">
             <div className="home__hero-copy">
-              <p className="eyebrow">Crow / Claude</p>
-              <h1>SUBMIT UR PROJECT NOW!</h1>
+              <p className="eyebrow">Digital Darwinism for builders</p>
+              <h1>Your project lives or dies by the crowd.</h1>
+              <p className="home__hero-sub">
+                Submit your work to a shared 60×60 arena. Every interaction buys it
+                time, builds momentum, and claims territory. Go quiet and it dies —
+                leaving a fossil behind.
+              </p>
               <div className="home__hero-actions">
-                <Link to="/explore" className="btn btn--primary"><TrendingUp size={18} /> Explore projects</Link>
+                <Link to="/submit" className="btn btn--primary"><Rocket size={18} /> Submit a project</Link>
+                <Link to="/explore" className="btn btn--outline"><TrendingUp size={18} /> Explore projects</Link>
                 <Link to="/grid" className="btn btn--outline"><Grid2x2 size={18} /> View the Grid</Link>
               </div>
             </div>
