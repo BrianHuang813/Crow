@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, MotionConfig } from 'motion/react';
-import { X, Copy, Check, Terminal } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, Copy, Check, Terminal, ChevronDown } from 'lucide-react';
 import './OnboardingModal.css';
 
 const STORAGE_KEY = 'crow_onboarded';
@@ -34,6 +35,7 @@ const crow = {
 export function OnboardingModal() {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
+  const [showTerminal, setShowTerminal] = useState(false);
 
   // Show once, shortly after the first page render.
   useEffect(() => {
@@ -92,29 +94,46 @@ export function OnboardingModal() {
               Welcome, builder
             </motion.h2>
             <motion.p className="onboard__lead" variants={item}>
-              Projects join the grid through the <strong>crow-submit</strong> Claude Code
-              plugin — install it once, then submit from any repo.
+              Crow is a living arena. Submit your project and the crowd keeps it
+              alive — or lets it die.
             </motion.p>
 
-            <motion.ol className="onboard__steps" variants={item}>
-              {STEPS.map((cmd, i) => (
-                <li key={cmd} className="onboard__step">
-                  <span className="onboard__num">{i + 1}</span>
-                  <code className="onboard__cmd">{cmd}</code>
-                  <button
-                    className="onboard__copy"
-                    aria-label={`Copy command ${i + 1}`}
-                    onClick={() => copyCmd(cmd, i)}
-                  >
-                    {copied === i ? <Check size={15} /> : <Copy size={15} />}
-                  </button>
+            <motion.div className="onboard__actions" variants={item}>
+              <Link className="btn btn--primary" to="/submit" onClick={dismiss}>
+                Submit on the web
+              </Link>
+            </motion.div>
+
+            <motion.button
+              type="button"
+              className="onboard__toggle"
+              variants={item}
+              onClick={() => setShowTerminal(v => !v)}
+              aria-expanded={showTerminal}
+            >
+              <ChevronDown size={14} /> Prefer your terminal? Install the Claude Code plugin
+            </motion.button>
+
+            {showTerminal && (
+              <ol className="onboard__steps">
+                {STEPS.map((cmd, i) => (
+                  <li key={cmd} className="onboard__step">
+                    <span className="onboard__num">{i + 1}</span>
+                    <code className="onboard__cmd">{cmd}</code>
+                    <button
+                      className="onboard__copy"
+                      aria-label={`Copy command ${i + 1}`}
+                      onClick={() => copyCmd(cmd, i)}
+                    >
+                      {copied === i ? <Check size={15} /> : <Copy size={15} />}
+                    </button>
+                  </li>
+                ))}
+                <li className="onboard__then">
+                  <Terminal size={14} /> Then run <code>/crow-submit:submit</code> in any project directory.
                 </li>
-              ))}
-            </motion.ol>
-
-            <motion.p className="onboard__then" variants={item}>
-              <Terminal size={14} /> Then run <code>/crow-submit:submit</code> in any project directory.
-            </motion.p>
+              </ol>
+            )}
 
             <motion.div className="onboard__actions" variants={item}>
               <a

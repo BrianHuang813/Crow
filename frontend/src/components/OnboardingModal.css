@@ -136,6 +136,19 @@
   to { opacity: 1; }
 }
 
+.onboard__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 4px;
+  background: none;
+  border: none;
+  color: var(--arena-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.onboard__toggle:hover { color: inherit; }
+
 @media (prefers-reduced-motion: reduce) {
   .onboard { animation: none; }
 }
