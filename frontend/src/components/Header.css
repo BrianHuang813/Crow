@@ -47,6 +47,7 @@
 }
 .app-header__right { display: flex; align-items: center; gap: 14px; }
 .app-header__credits { font-size: 14px; font-weight: 700; color: var(--mint); white-space: nowrap; }
+.app-header__submit { padding: 8px 16px; white-space: nowrap; }
 
 @media (max-width: 900px) {
   .app-header { gap: 18px; }

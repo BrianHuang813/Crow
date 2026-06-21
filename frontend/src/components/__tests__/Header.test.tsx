@@ -18,4 +18,10 @@ describe('Header', () => {
     expect(screen.getByText(/42/)).toBeInTheDocument();
     expect(screen.queryByText(/submit project/i)).not.toBeInTheDocument();
   });
+
+  it('exposes persistent Submit and How it works entries', () => {
+    render(<MemoryRouter><Header /></MemoryRouter>);
+    expect(screen.getByRole('link', { name: /^submit$/i })).toHaveAttribute('href', '/submit');
+    expect(screen.getByRole('link', { name: /how it works/i })).toHaveAttribute('href', '/how-it-works');
+  });
 });

@@ -9,6 +9,7 @@ describe('application routes', () => {
     expect(paths).toEqual([
       '/',
       '/submit',
+      '/how-it-works',
       '/explore',
       '/grid',
       '/p/:id',
