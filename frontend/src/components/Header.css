@@ -59,10 +59,11 @@
   .app-header {
     min-height: 60px;
     gap: 12px;
+    flex-wrap: wrap;
   }
   .app-header__brand img { width: 26px; height: 26px; }
   .app-header__name { font-size: 18px; }
-  .app-header__nav { gap: 14px; }
+  .app-header__nav { order: 3; flex-basis: 100%; justify-content: center; gap: 14px; margin-left: 0; }
   .app-header__link { padding-block: 18px 15px; font-size: 13px; }
   .app-header__credits { display: none; }
   .app-header__right .login-button__handle,
