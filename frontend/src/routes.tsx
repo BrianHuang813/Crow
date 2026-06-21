@@ -6,6 +6,7 @@ import GridPage from './pages/GridPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ProfilePage from './pages/ProfilePage';
 import SharePage from './pages/SharePage';
+import SubmitPage from './pages/SubmitPage';
 import { AuthCallback } from './components/AuthCallback';
 
 export const router = createBrowserRouter([
@@ -14,6 +15,7 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: '/', element: <HomePage /> },
+      { path: '/submit', element: <SubmitPage /> },
       { path: '/explore', element: <ExplorePage /> },
       { path: '/grid', element: <GridPage /> },
       { path: '/p/:id', element: <ProjectDetailPage /> },

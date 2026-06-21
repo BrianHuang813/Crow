@@ -1,0 +1,15 @@
+.submit { padding-block: 48px; max-width: 640px; }
+.submit__lead { color: var(--arena-text-muted); margin-bottom: 24px; }
+.submit__form { display: flex; flex-direction: column; gap: 18px; }
+.submit__field { display: flex; flex-direction: column; gap: 6px; }
+.submit__field > span { font-size: 14px; display: flex; justify-content: space-between; }
+.submit__field input,
+.submit__field textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--arena-line);
+  border-radius: 8px;
+  background: var(--arena-surface);
+  color: inherit;
+  font: inherit;
+}
+.submit__error { color: var(--dying); font-size: 13px; }
