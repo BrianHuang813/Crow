@@ -3,14 +3,9 @@ import { motion, MotionConfig } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { X, Copy, Check, Terminal, ChevronDown } from 'lucide-react';
 import './OnboardingModal.css';
+import { PLUGIN_REPO, PLUGIN_INSTALL_STEPS, PLUGIN_RUN_COMMAND } from '../lib/submit';
 
 const STORAGE_KEY = 'crow_onboarded';
-const PLUGIN_REPO = 'https://github.com/BrianHuang813/crow-plugins';
-
-const STEPS = [
-  '/plugin marketplace add BrianHuang813/crow-plugins',
-  '/plugin install crow-submit@crow',
-];
 
 // Stagger the content in; the crow gets a little welcome hop.
 const container = {
@@ -116,7 +111,7 @@ export function OnboardingModal() {
 
             {showTerminal && (
               <ol className="onboard__steps">
-                {STEPS.map((cmd, i) => (
+                {PLUGIN_INSTALL_STEPS.map((cmd, i) => (
                   <li key={cmd} className="onboard__step">
                     <span className="onboard__num">{i + 1}</span>
                     <code className="onboard__cmd">{cmd}</code>
@@ -130,7 +125,7 @@ export function OnboardingModal() {
                   </li>
                 ))}
                 <li className="onboard__then">
-                  <Terminal size={14} /> Then run <code>/crow-submit:submit</code> in any project directory.
+                  <Terminal size={14} /> Then run <code>{PLUGIN_RUN_COMMAND}</code> in any project directory.
                 </li>
               </ol>
             )}
