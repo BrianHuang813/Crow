@@ -1,8 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useQueries } from '@tanstack/react-query';
 import { Search } from 'lucide-react';
 import { useProjects } from '../hooks/useProjects';
 import { useUserSearch } from '../hooks/useUserSearch';
+import { useSavedProjects } from '../hooks/useSavedProjects';
+import { fetchProject } from '../api/projects';
 import type { Project } from '../types/api';
 import type { ListParams } from '../api/social';
 import { ProjectCard } from '../components/ProjectCard';
@@ -10,7 +13,7 @@ import { UserResultCard } from '../components/UserResultCard';
 import { SkeletonGrid } from '../components/SkeletonCard';
 import './ExplorePage.css';
 
-type ExploreTab = 'projects' | 'users';
+type ExploreTab = 'projects' | 'users' | 'saved';
 
 const PAGE_SIZE = 12;
 
@@ -23,7 +26,8 @@ const SORTS: { label: string; value: NonNullable<ListParams['sort']> }[] = [
 export default function ExplorePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [limit, setLimit] = useState(PAGE_SIZE);
-  const tab: ExploreTab = searchParams.get('type') === 'users' ? 'users' : 'projects';
+  const typeParam = searchParams.get('type');
+  const tab: ExploreTab = typeParam === 'users' ? 'users' : typeParam === 'saved' ? 'saved' : 'projects';
   const sort = (searchParams.get('sort') as ListParams['sort']) ?? 'momentum';
   const tag = searchParams.get('tag') ?? undefined;
   const rawQuery = searchParams.get('q')?.trim() ?? '';
@@ -54,8 +58,8 @@ export default function ExplorePage() {
   function updateParams(next: { sort?: string; tag?: string | null; q?: string; type?: ExploreTab }) {
     const params = new URLSearchParams(searchParams);
     if (next.type) {
-      if (next.type === 'users') params.set('type', 'users');
-      else params.delete('type');
+      if (next.type === 'projects') params.delete('type');
+      else params.set('type', next.type);
     }
     if (next.sort) params.set('sort', next.sort);
     if (next.tag === null) params.delete('tag');
@@ -98,6 +102,9 @@ export default function ExplorePage() {
         <button className={tab === 'users' ? 'is-active' : ''} onClick={() => updateParams({ type: 'users' })}>
           Builders
         </button>
+        <button className={tab === 'saved' ? 'is-active' : ''} onClick={() => updateParams({ type: 'saved' })}>
+          Saved
+        </button>
       </div>
 
       <div className="explore__search">
@@ -135,7 +142,7 @@ export default function ExplorePage() {
             </button>
           )}
         </>
-      ) : (
+      ) : tab === 'users' ? (
         <>
           {!rawQuery && <PageMessage>Type a handle to find builders.</PageMessage>}
           {rawQuery && userSearch.isError && <PageMessage>Search is unavailable right now. Retrying shortly.</PageMessage>}
@@ -147,6 +154,8 @@ export default function ExplorePage() {
             {userSearch.data?.items.map(user => <UserResultCard key={user.handle} user={user} />)}
           </section>
         </>
+      ) : (
+        <SavedProjects />
       )}
     </main>
   );
@@ -154,4 +163,23 @@ export default function ExplorePage() {
 
 function PageMessage({ children }: { children: React.ReactNode }) {
   return <div className="page-message">{children}</div>;
+}
+
+function SavedProjects() {
+  const { saved } = useSavedProjects();
+  const results = useQueries({
+    queries: saved.map(id => ({
+      queryKey: ['project', id],
+      queryFn: () => fetchProject(id),
+      retry: false,
+    })),
+  });
+  const projects = results.map(r => r.data).filter((p): p is Project => !!p);
+
+  if (saved.length === 0) return <PageMessage>No saved projects yet. Tap the bookmark on any project to save it.</PageMessage>;
+  return (
+    <section className="explore__grid" aria-label="Saved projects">
+      {projects.map((project, i) => <ProjectCard key={project.id} project={project} index={i} />)}
+    </section>
+  );
 }

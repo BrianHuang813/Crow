@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Clock, Grid2x2, TrendingUp } from 'lucide-react';
+import { Bookmark, Clock, Grid2x2, TrendingUp } from 'lucide-react';
 import { motion } from 'motion/react';
 import type { Project } from '../types/api';
 import { formatTimeLeft } from '../utils/time';
+import { useSavedProjects } from '../hooks/useSavedProjects';
 import { ProjectArtwork } from './ProjectArtwork';
 import './ProjectCard.css';
 
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function ProjectCard({ project, featured = false, index = 0 }: Props) {
+  const { isSaved, toggle } = useSavedProjects();
   return (
     <motion.article
       className={`project-card life life--${project.status}${featured ? ' project-card--featured' : ''}`}
@@ -35,6 +37,15 @@ export function ProjectCard({ project, featured = false, index = 0 }: Props) {
             <TrendingUp size={16} />
             <strong>{project.momentum}</strong>
           </div>
+          <button
+            type="button"
+            className={`project-card__save${isSaved(project.id) ? ' is-saved' : ''}`}
+            aria-pressed={isSaved(project.id)}
+            aria-label={isSaved(project.id) ? 'Remove bookmark' : 'Save project'}
+            onClick={() => toggle(project.id)}
+          >
+            <Bookmark size={16} />
+          </button>
         </div>
 
         {project.description && <p className="project-card__description">{project.description}</p>}

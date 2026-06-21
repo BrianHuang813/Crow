@@ -115,3 +115,13 @@
   align-items: center;
   gap: 6px;
 }
+
+.project-card__save {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+}
+.project-card__save.is-saved { color: var(--accent); }
+.project-card__save.is-saved svg { fill: currentColor; }
