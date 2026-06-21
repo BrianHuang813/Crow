@@ -4,7 +4,7 @@ import { ProjectActions } from '../ProjectActions';
 import type { Project } from '../../types/api';
 
 const flags = {
-  isOwnProject: false, inCooldown: false, canBoost: true, canResurrect: false,
+  isLoggedIn: true, isOwnProject: false, inCooldown: false, canBoost: true, canResurrect: false,
   showInteract: true, credits: 500,
   clickMutation: { mutate: vi.fn(), isPending: false },
   boostMutation: { mutate: vi.fn(), isPending: false },

@@ -1,5 +1,6 @@
 import { Zap, Rocket, Sparkles, Hourglass } from 'lucide-react';
 import { useProjectInteractions } from '../hooks/useProjectInteractions';
+import { startLogin } from '../utils/loginRedirect';
 import type { Project } from '../types/api';
 import './ProjectActions.css';
 
@@ -15,6 +16,20 @@ export function ProjectActions({ project }: Props) {
 
   return (
     <div className="project-actions">
+      {!isLoggedIn && project.status !== 'dead' && (
+        <>
+          <button className="btn btn--secondary" onClick={() => startLogin()}>
+            <Zap size={15} /> Click
+          </button>
+          <button className="btn btn--primary" onClick={() => startLogin()}>
+            <Rocket size={15} /> Boost <span className="project-actions__cost">20₵</span>
+          </button>
+          <p className="project-actions__hint project-actions__login-hint">
+            Log in with GitHub to Click or Boost — and start earning Credits.
+          </p>
+        </>
+      )}
+
       {showInteract && (
         <>
           <button

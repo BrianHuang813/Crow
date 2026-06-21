@@ -2,3 +2,6 @@
 .project-actions .btn { display: inline-flex; align-items: center; gap: 8px; }
 .project-actions__hint { color: var(--text-muted); font-size: 13px; }
 .project-actions__cost { font-family: var(--font-pixel); font-size: 16px; }
+.project-actions__login-hint {
+  flex-basis: 100%;
+}
