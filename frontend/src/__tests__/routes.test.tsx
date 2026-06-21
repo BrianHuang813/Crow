@@ -8,13 +8,13 @@ describe('application routes', () => {
 
     expect(paths).toEqual([
       '/',
+      '/submit',
       '/explore',
       '/grid',
       '/p/:id',
       '/u/:handle',
       '/share/:id',
     ]);
-    expect(paths).not.toContain('/submit');
   });
 
   it('keeps the authentication callback outside the application layout', () => {
