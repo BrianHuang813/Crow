@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { consumeLoginRedirect } from '../utils/loginRedirect';
 
 export function AuthCallback() {
   const { login } = useAuth();
@@ -11,7 +12,7 @@ export function AuthCallback() {
     if (token && handle) {
       login(token, handle);
     }
-    window.location.replace('/');
+    window.location.replace(consumeLoginRedirect() ?? '/');
   }, [login]);
 
   return <div className="auth-loading">Authenticating…</div>;
