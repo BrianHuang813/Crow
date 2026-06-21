@@ -7,6 +7,7 @@ import ProjectDetailPage from './pages/ProjectDetailPage';
 import ProfilePage from './pages/ProfilePage';
 import SharePage from './pages/SharePage';
 import SubmitPage from './pages/SubmitPage';
+import HowItWorksPage from './pages/HowItWorksPage';
 import { AuthCallback } from './components/AuthCallback';
 
 export const router = createBrowserRouter([
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/submit', element: <SubmitPage /> },
+      { path: '/how-it-works', element: <HowItWorksPage /> },
       { path: '/explore', element: <ExplorePage /> },
       { path: '/grid', element: <GridPage /> },
       { path: '/p/:id', element: <ProjectDetailPage /> },

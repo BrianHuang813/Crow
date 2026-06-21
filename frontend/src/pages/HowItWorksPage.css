@@ -1,0 +1,21 @@
+.howto { padding-block: 48px; max-width: 760px; }
+.howto__intro { margin-bottom: 32px; }
+.howto__lead { margin-top: 12px; color: var(--text-muted); line-height: 1.55; max-width: 60ch; }
+.howto__section { margin-top: 36px; }
+.howto__section h2 { font-size: 24px; letter-spacing: -0.02em; margin-bottom: 16px; }
+.howto__section h3 { font-size: 18px; margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; }
+.howto__defs { display: grid; gap: 12px; }
+.howto__defs dt { font-weight: 700; }
+.howto__defs dd { margin: 2px 0 0; color: var(--text-muted); line-height: 1.5; }
+.howto__table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+.howto__table th, .howto__table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--arena-line); vertical-align: top; }
+.howto__table th { color: var(--text-muted); font-weight: 600; }
+.howto__path { margin-top: 20px; padding: 18px; border: 1px solid var(--arena-line); border-radius: 12px; }
+.howto__path p { color: var(--text-muted); margin: 6px 0 14px; line-height: 1.5; }
+.howto__steps { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.howto__step { display: flex; align-items: center; gap: 10px; }
+.howto__num { width: 20px; height: 20px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--arena-surface); font-size: 12px; }
+.howto__cmd { flex: 1; padding: 8px 10px; border-radius: 8px; background: var(--arena-surface); font-family: var(--font-mono, monospace); font-size: 13px; overflow-x: auto; }
+.howto__copy { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; }
+.howto__run { font-size: 14px; }
+.howto__plugin-link { font-size: 14px; color: var(--accent); }
