@@ -143,7 +143,7 @@
   margin: 14px 0 4px;
   background: none;
   border: none;
-  color: var(--arena-text-muted);
+  color: var(--text-muted);
   font: inherit;
   cursor: pointer;
 }
