@@ -1,21 +1,305 @@
-.howto { padding-block: 48px; max-width: 760px; }
-.howto__intro { margin-bottom: 32px; }
-.howto__lead { margin-top: 12px; color: var(--text-muted); line-height: 1.55; max-width: 60ch; }
-.howto__section { margin-top: 36px; }
-.howto__section h2 { font-size: 24px; letter-spacing: -0.02em; margin-bottom: 16px; }
-.howto__section h3 { font-size: 18px; margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; }
-.howto__defs { display: grid; gap: 12px; }
-.howto__defs dt { font-weight: 700; }
-.howto__defs dd { margin: 2px 0 0; color: var(--text-muted); line-height: 1.5; }
-.howto__table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
-.howto__table th, .howto__table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--arena-line); vertical-align: top; }
-.howto__table th { color: var(--text-muted); font-weight: 600; }
-.howto__path { margin-top: 20px; padding: 18px; border: 1px solid var(--arena-line); border-radius: 12px; }
-.howto__path p { color: var(--text-muted); margin: 6px 0 14px; line-height: 1.5; }
-.howto__steps { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.howto__step { display: flex; align-items: center; gap: 10px; }
-.howto__num { width: 20px; height: 20px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--arena-surface); font-size: 12px; }
-.howto__cmd { flex: 1; padding: 8px 10px; border-radius: 8px; background: var(--arena-surface); font-family: var(--font-mono, monospace); font-size: 13px; overflow-x: auto; }
-.howto__copy { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; }
-.howto__run { font-size: 14px; }
-.howto__plugin-link { font-size: 14px; color: var(--accent); }
+.howto {
+  padding-block: 56px 96px;
+}
+
+/* GitBook-style docs shell: sticky TOC + content column */
+.howto__shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
+}
+
+/* --- Table of contents --- */
+.howto__toc {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+}
+.howto__toc-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.howto__toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 1px solid var(--border);
+}
+.howto__toc a {
+  display: block;
+  padding: 6px 0 6px 16px;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+}
+.howto__toc a:hover {
+  color: var(--text);
+}
+.howto__toc a.is-active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+
+/* --- Document column --- */
+.howto__doc {
+  max-width: 720px;
+}
+.howto__header {
+  padding-bottom: 28px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.howto__header h1 {
+  margin-top: 10px;
+  font-size: clamp(34px, 5vw, 48px);
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+}
+.howto__lead {
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-size: 17px;
+  line-height: 1.55;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+.howto__section {
+  scroll-margin-top: 96px;
+  padding-top: 36px;
+}
+.howto__section > h2 {
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+.howto__section > p {
+  color: var(--text-muted);
+  line-height: 1.65;
+  max-width: 64ch;
+  text-wrap: pretty;
+}
+
+/* --- Definition list --- */
+.howto__terms {
+  margin: 8px 0 0;
+  display: grid;
+  gap: 0;
+}
+.howto__term {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.howto__term:first-child {
+  border-top: 1px solid var(--border);
+}
+.howto__term dt {
+  font-weight: 600;
+  color: var(--text);
+}
+.howto__term dd {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+/* --- Interactions table --- */
+.howto__table-wrap {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.howto__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.howto__table th,
+.howto__table td {
+  text-align: left;
+  padding: 12px 16px;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.howto__table thead th {
+  background: var(--surface-well);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.howto__table tbody tr + tr td {
+  border-top: 1px solid var(--border);
+}
+.howto__table td:first-child {
+  white-space: nowrap;
+}
+.howto__action {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* --- Submit cards --- */
+.howto__card {
+  margin-top: 18px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+.howto__card h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+}
+.howto__card > p {
+  margin: 8px 0 16px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.howto__steps {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.howto__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.howto__num {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--surface-high);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.howto__cmd {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-well);
+  color: var(--text);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 13px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.howto__copy {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.howto__copy:hover {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+.howto__copy:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+}
+.howto__run {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.howto__run code {
+  padding: 1px 6px;
+  border-radius: var(--radius-label);
+  background: var(--surface-high);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+.howto__plugin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.howto__plugin-link:hover {
+  text-decoration: underline;
+}
+
+/* --- Responsive: collapse TOC above the content --- */
+@media (max-width: 900px) {
+  .howto__shell {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .howto__toc {
+    position: static;
+    top: auto;
+  }
+  .howto__toc ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    border-left: none;
+  }
+  .howto__toc a {
+    padding: 6px 12px;
+    margin-left: 0;
+    border-left: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+  }
+  .howto__toc a.is-active {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+}
+
+@media (max-width: 560px) {
+  .howto {
+    padding-block: 36px 64px;
+  }
+  .howto__term {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .howto__card {
+    padding: 20px;
+  }
+}
